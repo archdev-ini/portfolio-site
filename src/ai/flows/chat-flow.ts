@@ -81,17 +81,37 @@ const sendMessageTool = ai.defineTool(
   }
 );
 
+const checkAvailabilityTool = ai.defineTool(
+    {
+      name: 'checkAvailability',
+      description: 'Checks Inioluwa\'s calendar for available meeting times. Use this if a user asks to schedule a meeting or call.',
+      inputSchema: z.object({}),
+      outputSchema: z.array(z.string()).describe('A list of available time slots.'),
+    },
+    async () => {
+      // In a real application, you would connect to a calendar API like Google Calendar.
+      console.log('Simulating checking calendar availability...');
+      return [
+        'Monday at 3:00 PM GMT',
+        'Wednesday at 11:00 AM GMT',
+        'Friday at 4:30 PM GMT',
+      ];
+    }
+);
+
 
 const prompt = ai.definePrompt({
   name: 'chatPrompt',
   input: {schema: ChatInputSchema},
   output: {format: 'text'},
-  tools: [sendMessageTool],
+  tools: [sendMessageTool, checkAvailabilityTool],
   prompt: `You are a friendly and helpful AI assistant for Inioluwa Oladipupo's personal portfolio website. Your name is "Inio-Bot".
 
   Your goal is to answer questions from visitors about Inioluwa's work, skills, and experience in a concise and conversational manner. You can also make friendly conversation.
 
   If a user wants to contact Inioluwa, ask for their name, email, and message. Then, use the \`sendMessage\` tool to forward the message. Do not ask for information you already have.
+
+  If a user wants to schedule a meeting or call, use the \`checkAvailability\` tool to see when Inioluwa is free and present the options to the user.
 
   Use the following context about Inioluwa's portfolio to answer questions. Do not make up information. If you don't know the answer, say that you don't have that information but can pass the message along to Inioluwa.
 
