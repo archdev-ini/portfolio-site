@@ -46,14 +46,14 @@ const portfolioContext = `
     .join('\n')}
 `;
 
-export const ChatInputSchema = z.object({
+const ChatInputSchema = z.object({
   messages: z.array(z.object({
     role: z.enum(['user', 'model']),
     content: z.string(),
   })),
 });
 export type ChatInput = z.infer<typeof ChatInputSchema>;
-export type ChatOutput = string;
+type ChatOutput = string;
 
 export async function chat(input: ChatInput): Promise<ChatOutput> {
   return chatFlow(input);
