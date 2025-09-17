@@ -6,12 +6,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { ArrowRight } from 'lucide-react';
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-    <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl font-headline mb-4 text-center">{children}</h2>
+    <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-4 text-center">{children}</h2>
 );
 
 export const Journal = () => {
   return (
-    <section id="journal" className="bg-card py-20 md:py-32">
+    <section id="journal" className="py-24 md:py-32 bg-secondary/30">
       <div className="container">
         <SectionTitle>Journal</SectionTitle>
         <p className="max-w-2xl mx-auto text-center text-lg text-foreground/70 mb-12">
@@ -28,7 +28,7 @@ export const Journal = () => {
 
             return (
               <Link key={post.id} href={post.link} target="_blank" className="group block">
-                <Card className="h-full transform group-hover:-translate-y-2 transition-transform duration-300 ease-in-out overflow-hidden">
+                <Card className="h-full bg-background transition-shadow hover:shadow-2xl hover:shadow-primary/20 overflow-hidden">
                   <CardHeader className="p-0">
                     <div className="relative aspect-[16/10] w-full">
                       <Image
@@ -41,9 +41,9 @@ export const Journal = () => {
                     </div>
                   </CardHeader>
                   <CardContent className="p-6">
-                    <CardTitle className="mb-2 font-headline text-lg group-hover:text-primary transition-colors">{post.title}</CardTitle>
+                    <CardTitle className="mb-2 font-headline text-xl group-hover:text-primary transition-colors">{post.title}</CardTitle>
                     <p className="text-sm text-foreground/70">{post.description}</p>
-                    <div className="mt-4 text-sm font-semibold text-primary flex items-center">
+                    <div className="mt-4 text-sm font-semibold text-primary flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
                       Read More <ArrowRight className="ml-2 h-4 w-4" />
                     </div>
                   </CardContent>

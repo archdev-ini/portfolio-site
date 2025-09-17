@@ -1,9 +1,10 @@
 import type { Metadata } from 'next';
-import { Inter } from 'next/font/google';
+import { Inter, Lexend } from 'next/font/google';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
+const lexend = Lexend({ subsets: ['latin'], variable: '--font-lexend' });
 
 export const metadata: Metadata = {
   title: 'Inioluwa Oladipupo | Architect & Web3 Developer',
@@ -17,7 +18,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.variable} font-body antialiased`}>
+      <body className={`${inter.variable} ${lexend.variable} font-body antialiased`}>
         {children}
         <Toaster />
       </body>

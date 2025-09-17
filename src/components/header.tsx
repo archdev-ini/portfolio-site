@@ -6,14 +6,15 @@ export const Header = () => {
     { href: '#about', label: 'About' },
     { href: '#work', label: 'Work' },
     { href: '#journal', label: 'Journal' },
+    { href: '#contact', label: 'Contact' },
   ];
 
   return (
     <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container flex h-14 items-center">
+      <div className="container flex h-16 items-center">
         <div className="mr-4 flex items-center">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <span className="font-bold">Inioluwa.xyz</span>
+            <span className="font-bold text-lg">Inioluwa.xyz</span>
           </Link>
           <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
             {navLinks.map((link) => (
@@ -27,9 +28,9 @@ export const Header = () => {
             ))}
           </nav>
         </div>
-        <div className="flex flex-1 items-center justify-end space-x-4">
-          <Button asChild>
-            <Link href="#contact">Get in Touch</Link>
+        <div className="flex flex-1 items-center justify-end">
+          <Button asChild variant="ghost">
+            <Link href="https://twitter.com/inioluwa_xyz" target="_blank">Say Hello</Link>
           </Button>
         </div>
       </div>

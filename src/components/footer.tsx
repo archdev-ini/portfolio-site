@@ -9,8 +9,8 @@ export const Footer = () => {
   ];
 
   return (
-    <footer className="border-t border-border/40">
-      <div className="container flex flex-col-reverse md:flex-row items-center justify-between py-6">
+    <footer className="border-t border-border/40 bg-secondary/30">
+      <div className="container flex flex-col-reverse md:flex-row items-center justify-between py-8">
         <p className="text-sm text-foreground/60 mt-4 md:mt-0">
           &copy; {new Date().getFullYear()} Inioluwa Oladipupo. All rights reserved.
         </p>

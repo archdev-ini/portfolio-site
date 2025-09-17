@@ -61,15 +61,15 @@ export const Contact = () => {
   }
 
   return (
-    <section id="contact" className="bg-card py-20 md:py-32">
+    <section id="contact" className="py-24 md:py-32">
       <div className="container">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           <div className="flex flex-col justify-center">
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl font-headline mb-4">
+            <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-4">
               Let's build something together.
             </h2>
-            <p className="text-lg text-foreground/70 mb-8">
-              Have a project in mind, a question, or just want to connect? Feel free to reach out.
+            <p className="text-lg text-foreground/70 mb-8 max-w-lg">
+              Have a project in mind, a question, or just want to connect? My inbox is always open. I'll get back to you as soon as I can.
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((social) => (
@@ -81,7 +81,7 @@ export const Contact = () => {
               ))}
             </div>
           </div>
-          <div>
+          <div className="bg-secondary/30 p-8 rounded-lg">
             <Form {...form}>
               <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
                 <FormField
@@ -123,7 +123,7 @@ export const Contact = () => {
                     </FormItem>
                   )}
                 />
-                <Button type="submit" disabled={form.formState.isSubmitting} className="w-full">
+                <Button type="submit" disabled={form.formState.isSubmitting} className="w-full" size="lg">
                   {form.formState.isSubmitting ? 'Sending...' : <>Send Message <Send className="ml-2 h-4 w-4" /></>}
                 </Button>
               </form>
