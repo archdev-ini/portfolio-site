@@ -13,6 +13,7 @@ export type Project = {
 export type JournalPost = {
   id: string;
   title: string;
+  category: 'Reflections' | 'Experiments' | 'Design Notes';
   description: string;
   imageId: string;
   link: string;
@@ -79,6 +80,7 @@ export const journalPosts: JournalPost[] = [
   {
     id: 'journal-1',
     title: 'On Digital Craftsmanship',
+    category: 'Reflections',
     description: 'Exploring what it means to be a craftsman in the age of digital fabrication and artificial intelligence.',
     imageId: 'journal-1',
     link: '#',
@@ -86,6 +88,7 @@ export const journalPosts: JournalPost[] = [
   {
     id: 'journal-2',
     title: 'The Future of Cities: Decentralized and Autonomous?',
+    category: 'Experiments',
     description: 'A thought experiment on how blockchain technology could reshape urban planning and governance.',
     imageId: 'journal-2',
     link: '#',
@@ -93,6 +96,7 @@ export const journalPosts: JournalPost[] = [
   {
     id: 'journal-3',
     title: 'Learning in Public: A Developer\'s Manifesto',
+    category: 'Design Notes',
     description: 'Why sharing your learning process is one of the most effective ways to grow as a developer and builder.',
     imageId: 'journal-3',
     link: '#',
