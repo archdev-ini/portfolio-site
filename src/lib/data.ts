@@ -21,7 +21,7 @@ export type JournalPost = {
 
 export type SkillCategory = {
   category: string;
-  icon: ComponentType;
+  icon: LucideIcon;
   items: string[];
 };
 
