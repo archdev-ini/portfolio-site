@@ -9,11 +9,10 @@ import {
 
 export const Header = () => {
   const navLinks = [
-    { href: '/#about', label: 'About' },
-    { href: '/#projects', label: 'Work' },
+    { href: '/about', label: 'About' },
+    { href: '/work', label: 'Work' },
     { href: '/#journal', label: 'Journal' },
     { href: '/#contact', label: 'Contact' },
-    { href: '/about', label: 'About Page' },
   ];
 
   return (
