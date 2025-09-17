@@ -1,3 +1,64 @@
 {
-  "placeholderImages": []
+  "placeholderImages": [
+    {
+      "id": "about-portrait",
+      "description": "Portrait of Inioluwa Oladipupo",
+      "imageUrl": "https://picsum.photos/seed/inioluwa/400/400",
+      "imageHint": "professional portrait"
+    },
+    {
+      "id": "project-arch-1",
+      "description": "Serene Residential Complex project image",
+      "imageUrl": "https://picsum.photos/seed/arch1/600/400",
+      "imageHint": "modern architecture"
+    },
+    {
+      "id": "project-web3-1",
+      "description": "Decentralized Identity Protocol project image",
+      "imageUrl": "https://picsum.photos/seed/web3-1/600/400",
+      "imageHint": "digital network"
+    },
+    {
+      "id": "project-writing-1",
+      "description": "The Aesthetics of Code project image",
+      "imageUrl": "https://picsum.photos/seed/writing1/600/400",
+      "imageHint": "minimalist workspace"
+    },
+    {
+      "id": "project-arch-2",
+      "description": "Urban Regeneration Masterplan project image",
+      "imageUrl": "https://picsum.photos/seed/arch2/600/400",
+      "imageHint": "city blueprint"
+    },
+    {
+      "id": "project-comm-1",
+      "description": "Dev x Design Meetup project image",
+      "imageUrl": "https://picsum.photos/seed/comm1/600/400",
+      "imageHint": "people collaborating"
+    },
+    {
+      "id": "project-web3-2",
+      "description": "NFT Ticketing Platform project image",
+      "imageUrl": "https://picsum.photos/seed/web3-2/600/400",
+      "imageHint": "glowing cubes"
+    },
+    {
+      "id": "journal-1",
+      "description": "On Digital Craftsmanship journal post image",
+      "imageUrl": "https://picsum.photos/seed/journal1/600/400",
+      "imageHint": "artisan hands"
+    },
+    {
+      "id": "journal-2",
+      "description": "The Future of Cities journal post image",
+      "imageUrl": "https://picsum.photos/seed/journal2/600/400",
+      "imageHint": "futuristic city"
+    },
+    {
+      "id": "journal-3",
+      "description": "Learning in Public journal post image",
+      "imageUrl": "https://picsum.photos/seed/journal3/600/400",
+      "imageHint": "open book"
+    }
+  ]
 }
