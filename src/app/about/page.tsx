@@ -2,6 +2,8 @@ import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
+import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 export default function AboutPage() {
   const aboutImage = PlaceHolderImages.find(img => img.id === 'about-portrait');
@@ -66,20 +68,26 @@ export default function AboutPage() {
 
             <div className="mt-24">
               <h3 className="text-3xl font-bold font-headline mb-8 text-center">Quick Highlights</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-7xl mx-auto">
                 {highlights.map((highlight) => (
-                  <div key={highlight.title} className="bg-background/50 p-6 rounded-lg">
-                    <h4 className="font-bold text-lg text-primary mb-2">{highlight.title}</h4>
+                  <div key={highlight.title} className="bg-secondary/30 p-6 rounded-lg text-center">
+                    <h4 className="font-bold text-xl text-primary mb-2 font-headline">{highlight.title}</h4>
                     <p className="text-foreground/70">{highlight.description}</p>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="text-center mt-24 max-w-3xl mx-auto">
-                <p className="text-xl text-foreground/80">
-                    This portfolio is more than a collection of projects — it’s a reflection of how I see design as a tool for transformation. If you’d like to collaborate, explore ideas, or simply connect, I’d love to hear from you.
+            <div className="text-center mt-24 max-w-3xl mx-auto bg-secondary/30 p-10 rounded-2xl">
+                <h3 className="text-3xl font-bold font-headline mb-4">Let's Connect</h3>
+                <p className="text-lg text-foreground/80 mb-6">
+                    This portfolio is a living reflection of my journey. If my work resonates with you, I’d love to explore ideas, collaborate on a project, or simply connect.
                 </p>
+                 <Button asChild size="lg">
+                    <Link href="/#contact">
+                       Get in Touch
+                    </Link>
+                </Button>
             </div>
           </div>
         </section>
