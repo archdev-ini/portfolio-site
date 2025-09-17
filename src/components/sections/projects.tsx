@@ -1,14 +1,15 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { projects } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '../ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Search } from 'lucide-react';
+import { Input } from '../ui/input';
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
     <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-12 text-center">{children}</h2>
@@ -18,13 +19,48 @@ export const Projects = () => {
   const categories = ['All', 'Architecture', 'Web3', 'Writing', 'Community'];
 
   const [filter, setFilter] = useState('All');
+  const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredProjects = filter === 'All' ? projects : projects.filter((p) => p.category === filter);
+  const filteredProjects = useMemo(() => {
+    let categoryFiltered = filter === 'All' ? projects : projects.filter((p) => p.category === filter);
+
+    if (!searchTerm) {
+      return categoryFiltered;
+    }
+
+    return categoryFiltered.filter((project) => {
+      const lowerCaseSearch = searchTerm.toLowerCase();
+      const searchIn = [
+        project.title,
+        project.description,
+        project.overview,
+        ...project.technologies,
+      ].join(' ').toLowerCase();
+
+      return searchIn.includes(lowerCaseSearch);
+    });
+
+  }, [filter, searchTerm]);
+
 
   return (
     <section id="projects" className="py-24 md:py-32">
       <div className="container">
         <SectionTitle>Featured Work</SectionTitle>
+
+        <div className="max-w-2xl mx-auto mb-8">
+            <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+                <Input
+                    type="search"
+                    placeholder="Search by title, technology, etc..."
+                    className="w-full pl-10"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                />
+            </div>
+        </div>
+
         <Tabs value={filter} onValueChange={setFilter} className="w-full">
           <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 mx-auto max-w-2xl mb-12">
             {categories.map((category) => (
@@ -67,6 +103,14 @@ export const Projects = () => {
               </Card>
             )})}
           </div>
+
+          {filteredProjects.length === 0 && (
+            <div className="text-center py-16 text-muted-foreground">
+                <p className="text-lg">No projects found.</p>
+                <p>Try adjusting your search or filter.</p>
+            </div>
+          )}
+
         </Tabs>
       </div>
     </section>
