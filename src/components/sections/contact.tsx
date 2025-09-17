@@ -3,7 +3,7 @@
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Github, Twitter, Linkedin, Send } from 'lucide-react';
+import { Linkedin, Twitter, Instagram, Mail, Send } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
@@ -27,9 +27,16 @@ const formSchema = z.object({
 });
 
 const socialLinks = [
-    { name: 'GitHub', icon: <Github />, href: 'https://github.com/inioluwa-xyz' },
-    { name: 'Twitter', icon: <Twitter />, href: 'https://twitter.com/inioluwa_xyz' },
     { name: 'LinkedIn', icon: <Linkedin />, href: 'https://linkedin.com/in/inioluwa-oladipupo' },
+    { name: 'X', icon: <Twitter />, href: 'https://twitter.com/inioluwa_xyz' },
+    { name: 'Instagram', icon: <Instagram />, href: 'https://instagram.com/inioluwa.xyz' },
+    { name: 'Substack', icon:  (
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M21.44 12.97l-9.45 6.49a1.5 1.5 0 01-2-.03l-9.39-6.49a1.5 1.5 0 010-2.93l9.4-6.52a1.5 1.5 0 012 0l9.45 6.52a1.5 1.5 0 010 2.96z"></path>
+        <path d="M2.61 9.87l9.4 6.52a1.5 1.5 0 002 0l9.45-6.52"></path>
+      </svg>
+    ), href: 'https://substack.com' },
+    { name: 'Email', icon: <Mail />, href: 'mailto:hello@inioluwa.xyz' },
 ];
 
 export const Contact = () => {
