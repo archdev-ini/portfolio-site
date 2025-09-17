@@ -59,6 +59,36 @@
       "description": "Learning in Public journal post image",
       "imageUrl": "https://picsum.photos/seed/journal3/600/400",
       "imageHint": "open book"
+    },
+    {
+      "id": "project-arch-1-gallery-1",
+      "description": "Gallery image 1 for Serene Residential Complex",
+      "imageUrl": "https://picsum.photos/seed/arch1-g1/800/600",
+      "imageHint": "building facade"
+    },
+    {
+      "id": "project-arch-1-gallery-2",
+      "description": "Gallery image 2 for Serene Residential Complex",
+      "imageUrl": "https://picsum.photos/seed/arch1-g2/800/600",
+      "imageHint": "interior courtyard"
+    },
+    {
+      "id": "project-web3-1-gallery-1",
+      "description": "Gallery image 1 for Decentralized Identity Protocol",
+      "imageUrl": "https://picsum.photos/seed/web3-1-g1/800/600",
+      "imageHint": "abstract data"
+    },
+    {
+      "id": "project-web3-1-gallery-2",
+      "description": "Gallery image 2 for Decentralized Identity Protocol",
+      "imageUrl": "https://picsum.photos/seed/web3-1-g2/800/600",
+      "imageHint": "code screen"
+    },
+    {
+      "id": "project-writing-1-gallery-1",
+      "description": "Gallery image 1 for The Aesthetics of Code",
+      "imageUrl": "https://picsum.photos/seed/writing1-g1/800/600",
+      "imageHint": "notebook page"
     }
   ]
 }

@@ -59,8 +59,8 @@ export const Projects = () => {
                 </CardContent>
                 <CardFooter className="p-6 pt-0">
                   <Button variant="outline" asChild className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
-                    <Link href={project.link} target="_blank">
-                      View Project <ArrowRight className="ml-2 h-4 w-4" />
+                    <Link href={`/work/${project.slug}`}>
+                      View Case Study <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
                 </CardFooter>
