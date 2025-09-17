@@ -19,7 +19,7 @@ export const Hero = () => {
         </div>
         <div className="flex justify-center gap-4">
           <Button size="lg" asChild>
-            <Link href="#work">Explore My Work <MoveRight className="ml-2" /></Link>
+            <Link href="#projects">Explore My Work <MoveRight className="ml-2" /></Link>
           </Button>
           <Button size="lg" variant="outline" asChild>
             <Link href="#contact">Get In Touch</Link>

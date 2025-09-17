@@ -22,7 +22,7 @@ export const Projects = () => {
   const filteredProjects = filter === 'All' ? projects : projects.filter((p) => p.category === filter);
 
   return (
-    <section id="work" className="py-24 md:py-32">
+    <section id="projects" className="py-24 md:py-32">
       <div className="container">
         <SectionTitle>Featured Work</SectionTitle>
         <Tabs value={filter} onValueChange={setFilter} className="w-full">
