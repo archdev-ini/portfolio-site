@@ -14,7 +14,7 @@ export const WorkPreview = () => {
   const featuredProjects = projects.slice(0, 3);
 
   return (
-    <section id="work-preview" className="py-24 md:py-32 bg-secondary/30">
+    <section id="work" className="py-24 md:py-32 bg-secondary/30">
       <div className="container">
         <SectionTitle>Featured Work</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
