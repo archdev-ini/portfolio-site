@@ -12,6 +12,7 @@ export const Header = () => {
     { href: '/about', label: 'About' },
     { href: '/work', label: 'Work' },
     { href: '/journal', label: 'Journal' },
+    { href: '/cv', label: 'CV' },
     { href: '/#contact', label: 'Contact' },
   ];
 

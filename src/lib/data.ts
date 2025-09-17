@@ -1,4 +1,4 @@
-import { DraftingCompass, CodeXml, Users, LucideIcon, Home, Database, PenSquare, Scale, Blocks, Mic } from 'lucide-react';
+import { DraftingCompass, CodeXml, Users, LucideIcon, Home, Database, PenSquare, Scale, Blocks, Mic, Briefcase, GraduationCap } from 'lucide-react';
 import type { ComponentType } from 'react';
 
 export type Project = {
@@ -23,6 +23,13 @@ export type SkillCategory = {
   category: string;
   icon: LucideIcon;
   items: string[];
+};
+
+export type CVItem = {
+  date: string;
+  title: string;
+  subtitle: string;
+  description: string;
 };
 
 export const projects: Project[] = [
@@ -118,5 +125,41 @@ export const skills: SkillCategory[] = [
     category: 'Community & Writing',
     icon: Users,
     items: ['Technical Writing', 'Content Strategy', 'Public Speaking', 'Community Management', 'Workshop Facilitation', 'Substack', 'Notion', 'Figma'],
+  },
+];
+
+export const cvExperience: CVItem[] = [
+  {
+    date: '2023 - Present',
+    title: 'Founder & Lead Developer',
+    subtitle: 'Aether & Rootos',
+    description: 'Building decentralized platforms for creative collaboration and skill-based learning. Responsible for product vision, smart contract development, and community growth.',
+  },
+  {
+    date: '2022 - 2023',
+    title: 'Architectural Intern',
+    subtitle: 'Urban-Future Architects',
+    description: 'Contributed to the design and documentation of large-scale residential and mixed-use projects. Focused on sustainable design research and BIM modeling.',
+  },
+  {
+    date: '2021',
+    title: 'Web3 Research Fellow',
+    subtitle: 'Decentralized Futures Lab',
+    description: 'Researched and wrote a whitepaper on decentralized governance models (DAOs) and their potential application in urban planning.',
+  },
+];
+
+export const cvEducation: CVItem[] = [
+  {
+    date: '2020 - 2025 (Expected)',
+    title: 'Master of Architecture',
+    subtitle: 'University of Lagos',
+    description: 'Thesis focus: The integration of smart contracts in managing community-owned real estate and public spaces.',
+  },
+  {
+    date: '2021',
+    title: 'Full-Stack Web3 Developer Bootcamp',
+    subtitle: 'Chainshot',
+    description: 'Intensive, project-based program covering Solidity, smart contracts, dApp development, and decentralized finance (DeFi).',
   },
 ];
