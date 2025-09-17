@@ -1,6 +1,5 @@
 import { Github, Twitter, Linkedin } from 'lucide-react';
 import Link from 'next/link';
-import { AboutPreview } from '@/components/sections/about-preview';
 
 export const Footer = () => {
   const socialLinks = [
@@ -9,21 +8,57 @@ export const Footer = () => {
     { icon: <Linkedin size={20} />, href: 'https://linkedin.com/in/inioluwa-oladipupo' },
   ];
 
+  const navLinks = [
+    { href: '/', label: 'Home' },
+    { href: '/about', label: 'About' },
+    { href: '/work', label: 'Work' },
+    { href: '/journal', label: 'Journal' },
+    { href: '/#contact', label: 'Contact' },
+  ];
+
   return (
     <footer className="border-t border-border/40 bg-secondary/30">
       <div className="container py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          <div className="lg:col-span-1">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-12">
+          <div className="md:col-span-1">
             <div className="space-y-4">
               <Link href="/" className="mr-6 flex items-center space-x-2">
                 <span className="font-bold text-lg">Inioluwa.xyz</span>
               </Link>
               <p className="text-base text-foreground/70">
-                An architecture student and Web3 developer exploring the intersection of space, code, and community to build more equitable and beautiful futures.
+                An architecture student and Web3 developer exploring the intersection of space, code, and community.
               </p>
             </div>
           </div>
-          {/* You can add more columns for navigation links or other content later */}
+          <div className="md:col-span-2 grid grid-cols-2 md:grid-cols-3 gap-8">
+            <div>
+              <h3 className="font-semibold text-foreground/90 mb-4">Navigation</h3>
+              <ul className="space-y-3">
+                {navLinks.map((link) => (
+                   <li key={link.href}>
+                     <Link href={link.href} className="text-foreground/70 transition-colors hover:text-primary">
+                       {link.label}
+                     </Link>
+                   </li>
+                ))}
+              </ul>
+            </div>
+             <div>
+              <h3 className="font-semibold text-foreground/90 mb-4">Contact</h3>
+               <ul className="space-y-3">
+                 <li>
+                   <Link href="/#contact" className="text-foreground/70 transition-colors hover:text-primary">
+                     Get in Touch
+                   </Link>
+                 </li>
+                  <li>
+                   <Link href="mailto:hello@inioluwa.xyz" className="text-foreground/70 transition-colors hover:text-primary">
+                     hello@inioluwa.xyz
+                   </Link>
+                 </li>
+              </ul>
+            </div>
+          </div>
         </div>
         <div className="flex flex-col-reverse md:flex-row items-center justify-between mt-12 pt-8 border-t border-border/40">
           <p className="text-sm text-foreground/60 mt-4 md:mt-0">

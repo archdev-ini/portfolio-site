@@ -15,9 +15,6 @@ export const AboutPreview = () => {
       <p className="text-base text-foreground/70">
         An architecture student and Web3 developer exploring the intersection of space, code, and community to build more equitable and beautiful futures.
       </p>
-       <p className="text-base text-foreground/70">
-        Design as a tool for transformation.
-      </p>
     </div>
   );
 };
