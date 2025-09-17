@@ -9,6 +9,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet"
 import { cn } from '@/lib/utils';
+import { ThemeToggle } from './theme-toggle';
 
 export const Header = () => {
   const navLinks = [
@@ -38,7 +39,7 @@ export const Header = () => {
             ))}
           </nav>
         </div>
-        <div className="flex flex-1 items-center justify-end">
+        <div className="flex flex-1 items-center justify-end space-x-2">
            <div className="md:hidden">
             <Sheet>
               <SheetTrigger asChild>
@@ -65,6 +66,7 @@ export const Header = () => {
               </SheetContent>
             </Sheet>
           </div>
+          <ThemeToggle />
           <Button asChild variant="ghost" className="hidden md:flex">
             <Link href="https://twitter.com/inioluwa_xyz" target="_blank">Say Hello</Link>
           </Button>
