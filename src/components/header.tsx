@@ -4,8 +4,11 @@ import { Menu } from 'lucide-react';
 import {
   Sheet,
   SheetContent,
+  SheetHeader,
+  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import { cn } from '@/lib/utils';
 
 export const Header = () => {
   const navLinks = [
@@ -45,6 +48,9 @@ export const Header = () => {
                 </Button>
               </SheetTrigger>
               <SheetContent side="right">
+                <SheetHeader>
+                  <SheetTitle className="sr-only">Menu</SheetTitle>
+                </SheetHeader>
                 <div className="grid gap-4 py-6">
                  {navLinks.map((link) => (
                     <Link
