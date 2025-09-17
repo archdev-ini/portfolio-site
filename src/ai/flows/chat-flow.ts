@@ -78,11 +78,15 @@ const prompt = ai.definePrompt({
 
   CONVERSATION HISTORY:
   {{#each messages}}
-    {{#if (/(user)/.test(role))}}USER: {{content}}{{/if}}
-    {{#if (/(model)/.test(role))}}ASSISTANT: {{content}}{{/if}}
+    {{#if (eq role 'user')}}USER: {{content}}{{/if}}
+    {{#if (eq role 'model')}}ASSISTANT: {{content}}{{/if}}
   {{/each}}
   
   ASSISTANT:`,
+  customize: (prompt) => {
+    prompt.handlebars.registerHelper('eq', (a, b) => a === b);
+    return prompt;
+  }
 });
 
 const chatFlow = ai.defineFlow(
