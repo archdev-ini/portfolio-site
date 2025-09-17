@@ -1,12 +1,19 @@
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
+import { Menu } from 'lucide-react';
+import {
+  Sheet,
+  SheetContent,
+  SheetTrigger,
+} from "@/components/ui/sheet"
 
 export const Header = () => {
   const navLinks = [
-    { href: '/about', label: 'About' },
+    { href: '/#about', label: 'About' },
     { href: '/#projects', label: 'Work' },
     { href: '/#journal', label: 'Journal' },
     { href: '/#contact', label: 'Contact' },
+    { href: '/about', label: 'About Page' },
   ];
 
   return (
@@ -29,7 +36,30 @@ export const Header = () => {
           </nav>
         </div>
         <div className="flex flex-1 items-center justify-end">
-          <Button asChild variant="ghost">
+           <div className="md:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon">
+                  <Menu />
+                  <span className="sr-only">Toggle Menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right">
+                <div className="grid gap-4 py-6">
+                 {navLinks.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      className="text-lg font-medium transition-colors hover:text-primary"
+                    >
+                      {link.label}
+                    </Link>
+                  ))}
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+          <Button asChild variant="ghost" className="hidden md:flex">
             <Link href="https://twitter.com/inioluwa_xyz" target="_blank">Say Hello</Link>
           </Button>
         </div>

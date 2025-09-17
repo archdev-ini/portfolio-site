@@ -1,6 +1,12 @@
 import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
+import Image from 'next/image';
+import { PlaceHolderImages } from '@/lib/placeholder-images';
 
 export const AboutPreview = () => {
+    const aboutImage = PlaceHolderImages.find(img => img.id === 'about-portrait');
+
   return (
     <div className="space-y-4">
       <Link href="/" className="mr-6 flex items-center space-x-2">

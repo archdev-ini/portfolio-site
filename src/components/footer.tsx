@@ -14,7 +14,14 @@ export const Footer = () => {
       <div className="container py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
           <div className="lg:col-span-1">
-            <AboutPreview />
+            <div className="space-y-4">
+              <Link href="/" className="mr-6 flex items-center space-x-2">
+                <span className="font-bold text-lg">Inioluwa.xyz</span>
+              </Link>
+              <p className="text-base text-foreground/70">
+                An architecture student and Web3 developer exploring the intersection of space, code, and community to build more equitable and beautiful futures.
+              </p>
+            </div>
           </div>
           {/* You can add more columns for navigation links or other content later */}
         </div>

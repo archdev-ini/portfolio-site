@@ -5,6 +5,7 @@ import { Projects } from '@/components/sections/projects';
 import { Journal } from '@/components/sections/journal';
 import { Skills } from '@/components/sections/skills';
 import { Contact } from '@/components/sections/contact';
+import { AboutPreview } from '@/components/sections/about-preview-section';
 
 export default function Home() {
   return (
@@ -12,6 +13,7 @@ export default function Home() {
       <Header />
       <main className="flex-1">
         <Hero />
+        <AboutPreview />
         <Projects />
         <Journal />
         <Skills />
