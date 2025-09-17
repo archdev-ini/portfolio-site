@@ -8,6 +8,13 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, Calendar, User, Tag } from 'lucide-react';
 import Link from 'next/link';
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 export async function generateStaticParams() {
   return projects.map((project) => ({
@@ -111,20 +118,26 @@ export default function ProjectPage({ params }: { params: { slug: string } }) {
 
                 {galleryImages && galleryImages.length > 0 && (
                   <div className="mt-16">
-                    <h3 className="font-headline text-2xl font-bold text-foreground mb-6">Gallery</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      {galleryImages.map((image) => image && (
-                        <div key={image.id} className="relative aspect-video rounded-lg overflow-hidden shadow-lg">
-                          <Image
-                            src={image.imageUrl}
-                            alt={image.description}
-                            fill
-                            className="object-cover"
-                            data-ai-hint={image.imageHint}
-                          />
-                        </div>
-                      ))}
-                    </div>
+                    <h3 className="font-headline text-2xl font-bold text-foreground mb-8">Gallery</h3>
+                    <Carousel className="w-full max-w-3xl mx-auto">
+                      <CarouselContent>
+                        {galleryImages.map((image) => image && (
+                          <CarouselItem key={image.id}>
+                            <div className="relative aspect-video rounded-lg overflow-hidden shadow-lg">
+                              <Image
+                                src={image.imageUrl}
+                                alt={image.description}
+                                fill
+                                className="object-cover"
+                                data-ai-hint={image.imageHint}
+                              />
+                            </div>
+                          </CarouselItem>
+                        ))}
+                      </CarouselContent>
+                      <CarouselPrevious />
+                      <CarouselNext />
+                    </Carousel>
                   </div>
                 )}
               </div>
