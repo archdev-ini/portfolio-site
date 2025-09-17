@@ -3,6 +3,7 @@ import { Inter, Lexend } from 'next/font/google';
 import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 import { ThemeProvider } from '@/components/theme-provider';
+import { AiChat } from '@/components/ai-chat';
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' });
 const lexend = Lexend({ subsets: ['latin'], variable: '--font-lexend' });
@@ -27,6 +28,7 @@ export default function RootLayout({
             disableTransitionOnChange
         >
           {children}
+          <AiChat />
           <Toaster />
         </ThemeProvider>
       </body>

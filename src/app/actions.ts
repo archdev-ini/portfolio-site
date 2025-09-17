@@ -1,6 +1,8 @@
 'use server';
 
 import { z } from 'zod';
+import { chat } from '@/ai/flows/chat-flow';
+import type { ChatInput } from '@/ai/flows/chat-flow';
 
 const formSchema = z.object({
   name: z.string(),
@@ -21,4 +23,10 @@ export async function submitContactForm(values: z.infer<typeof formSchema>) {
     success: true,
     message: 'Message sent successfully!',
   };
+}
+
+
+export async function submitChatMessage(values: ChatInput) {
+    const result = await chat(values);
+    return result;
 }
