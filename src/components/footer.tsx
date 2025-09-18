@@ -62,7 +62,7 @@ export const Footer = () => {
         </div>
         <div className="flex flex-col-reverse md:flex-row items-center justify-between mt-12 pt-8 border-t border-border/40">
           <p className="text-sm text-foreground/60 mt-4 md:mt-0">
-            &copy; {new Date().getFullYear()} Inioluwa Oladipupo. All rights reserved.
+            &copy; {new Date().getFullYear()} Inioluwa Oladipupo. Designed with intention.
           </p>
           <div className="flex items-center space-x-4">
             {socialLinks.map((social, index) => (

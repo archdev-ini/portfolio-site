@@ -13,17 +13,14 @@ export const AboutPreview = () => {
             <div className="grid md:grid-cols-2 gap-16 items-center">
                 <div className="space-y-6">
                     <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline">
-                        Designing Futures — in Space, Code, and Community
+                        About Me
                     </h2>
                     <p className="text-lg text-foreground/70">
-                        I’m Inioluwa Oladipupo, an architecture student and Web3 developer passionate about shaping environments — both physical and digital — that empower people.
-                    </p>
-                    <p className="text-lg text-foreground/70">
-                        My work spans multiple disciplines but stays rooted in one mission: to build intentional ecosystems where creativity, culture, and innovation thrive together.
+                        I’m an architecture student and Web3 developer exploring how design, code, and community can shape the future. My work spans sustainable architecture, decentralized learning platforms, writing, and ecosystem building — all rooted in one goal: creating intentional systems that last.
                     </p>
                     <Button asChild size="lg" variant="outline">
                         <Link href="/about">
-                            Learn More About Me <ArrowRight className="ml-2" />
+                            Read More <ArrowRight className="ml-2" />
                         </Link>
                     </Button>
                 </div>

@@ -25,9 +25,9 @@ export const Journal = ({ isPage = false }: { isPage?: boolean }) => {
   return (
     <section id="journal" className="py-24 md:py-32 bg-secondary/30">
       <div className="container">
-        <SectionTitle>Journal</SectionTitle>
+        <SectionTitle>Notes &amp; Sketches</SectionTitle>
         <p className="max-w-2xl mx-auto text-center text-lg text-foreground/70 mb-12">
-          Thoughts, reflections, and experiments from my Substack,{' '}
+          Thoughts, experiments, and reflections on architecture, code, and community from my Substack,{' '}
           <Link href="https://substack.com" target="_blank" className="text-primary underline-offset-4 hover:underline">
             0xSketches
           </Link>.
@@ -110,7 +110,7 @@ export const Journal = ({ isPage = false }: { isPage?: boolean }) => {
             </div>
             <div className="mt-16 text-center">
               <Button size="lg" asChild>
-                <Link href="/journal">View All Posts <MoveRight className="ml-2" /></Link>
+                <Link href="/journal">Read More <MoveRight className="ml-2" /></Link>
               </Button>
             </div>
           </>

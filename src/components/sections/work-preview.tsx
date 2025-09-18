@@ -16,7 +16,7 @@ export const WorkPreview = () => {
   return (
     <section id="work" className="py-24 md:py-32 bg-secondary/30">
       <div className="container">
-        <SectionTitle>Featured Work</SectionTitle>
+        <SectionTitle>Selected Work</SectionTitle>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {featuredProjects.map((project) => {
             const projectImage = PlaceHolderImages.find(img => img.id === project.imageId);
@@ -53,7 +53,7 @@ export const WorkPreview = () => {
         </div>
         <div className="mt-16 text-center">
           <Button size="lg" asChild>
-            <Link href="/work">View All Work <MoveRight className="ml-2" /></Link>
+            <Link href="/work">View Full Portfolio <MoveRight className="ml-2" /></Link>
           </Button>
         </div>
       </div>

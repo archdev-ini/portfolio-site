@@ -73,10 +73,10 @@ export const Contact = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           <div className="flex flex-col justify-center">
             <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-4">
-              Let's build something together.
+              Let's Build Something Together
             </h2>
             <p className="text-lg text-foreground/70 mb-8 max-w-lg">
-              Have a project in mind, a question, or just want to connect? My inbox is always open. I'll get back to you as soon as I can.
+              From architectural design to decentralized applications, I collaborate on projects that push boundaries and create lasting value.
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((social) => (
@@ -131,7 +131,7 @@ export const Contact = () => {
                   )}
                 />
                 <Button type="submit" disabled={form.formState.isSubmitting} className="w-full" size="lg">
-                  {form.formState.isSubmitting ? 'Sending...' : <>Send Message <Send className="ml-2 h-4 w-4" /></>}
+                  {form.formState.isSubmitting ? 'Sending...' : <>Get in Touch <Send className="ml-2 h-4 w-4" /></>}
                 </Button>
               </form>
             </Form>
