@@ -1,4 +1,4 @@
-import { DraftingCompass, CodeXml, Users, LucideIcon } from 'lucide-react';
+import { DraftingCompass, CodeXml, Users, type LucideIcon } from 'lucide-react';
 import { fetchProjects, fetchJournalPosts, fetchSkills, fetchExperience, fetchEducation, fetchSiteSettings, fetchAboutContent, fetchContactContent } from './airtable';
 
 
@@ -29,6 +29,11 @@ export type JournalPost = {
   link: string;
 };
 
+export type Skill = {
+    name: string;
+    category: string;
+}
+
 export type SkillCategory = {
   category: string;
   icon: LucideIcon;
@@ -42,6 +47,11 @@ export type CVItem = {
   description: string;
 };
 
+export type SocialLink = {
+    name: string;
+    href: string;
+}
+
 export type SiteSettings = {
     siteTitle: string;
     hero: {
@@ -51,7 +61,7 @@ export type SiteSettings = {
     };
     footer: {
         text: string;
-        socialLinks: Array<{ name: string, href: string }>;
+        socialLinks: SocialLink[];
     }
 };
 
