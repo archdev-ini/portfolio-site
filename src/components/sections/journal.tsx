@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { journalPosts } from '@/lib/data';
+import { db } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -18,8 +18,9 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
 export const Journal = ({ isPage = false }: { isPage?: boolean }) => {
   const categories = ['All', 'Reflections', 'Experiments', 'Design Notes'];
   const [filter, setFilter] = useState('All');
-
-  const displayedPosts = isPage ? journalPosts : journalPosts.slice(0, 3);
+  
+  const allPosts = db.journal.all();
+  const displayedPosts = isPage ? allPosts : db.journal.latest(3);
   const filteredPosts = filter === 'All' ? displayedPosts : displayedPosts.filter((p) => p.category === filter);
 
   return (

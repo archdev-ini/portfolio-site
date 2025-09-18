@@ -10,8 +10,10 @@ import {
 } from "@/components/ui/sheet"
 import { cn } from '@/lib/utils';
 import { ThemeToggle } from './theme-toggle';
+import { db } from '@/lib/data';
 
 export const Header = () => {
+  const { siteTitle } = db.site;
   const navLinks = [
     { href: '/about', label: 'About' },
     { href: '/work', label: 'Work' },
@@ -25,7 +27,7 @@ export const Header = () => {
       <div className="container flex h-16 items-center">
         <div className="mr-4 flex items-center">
           <Link href="/" className="mr-6 flex items-center space-x-2">
-            <span className="font-bold text-lg">Inioluwa.xyz</span>
+            <span className="font-bold text-lg">{siteTitle}</span>
           </Link>
           <nav className="hidden md:flex items-center space-x-6 text-sm font-medium">
             {navLinks.map((link) => (

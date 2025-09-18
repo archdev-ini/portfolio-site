@@ -7,7 +7,7 @@ export default function WorkPage() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-1">
-        <Projects />
+        <Projects isPage={true} />
       </main>
       <Footer />
     </div>

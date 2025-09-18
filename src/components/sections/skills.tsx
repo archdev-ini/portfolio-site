@@ -1,4 +1,4 @@
-import { skills } from '@/lib/data';
+import { db } from '@/lib/data';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
@@ -6,6 +6,7 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
 );
 
 export const Skills = () => {
+  const skills = db.skills.all();
   return (
     <section id="skills" className="py-24 md:py-32">
       <div className="container">

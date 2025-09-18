@@ -3,9 +3,11 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { db } from '@/lib/data';
 
 export const AboutPreview = () => {
-    const aboutImage = PlaceHolderImages.find(img => img.id === 'about-portrait');
+    const { shortText, profileImageId } = db.about;
+    const aboutImage = PlaceHolderImages.find(img => img.id === profileImageId);
 
   return (
     <section id="about" className="py-24 md:py-32">
@@ -16,7 +18,7 @@ export const AboutPreview = () => {
                         About Me
                     </h2>
                     <p className="text-lg text-foreground/70">
-                        I’m an architecture student and Web3 developer exploring how design, code, and community can shape the future. My work spans sustainable architecture, decentralized learning platforms, writing, and ecosystem building — all rooted in one goal: creating intentional systems that last.
+                       {shortText}
                     </p>
                     <Button asChild size="lg" variant="outline">
                         <Link href="/about">

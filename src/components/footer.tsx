@@ -1,12 +1,16 @@
 import { Github, Twitter, Linkedin } from 'lucide-react';
 import Link from 'next/link';
+import { db } from '@/lib/data';
+
+const socialIconMap: { [key: string]: React.ReactNode } = {
+  Github: <Github size={20} />,
+  Twitter: <Twitter size={20} />,
+  LinkedIn: <Linkedin size={20} />,
+};
 
 export const Footer = () => {
-  const socialLinks = [
-    { icon: <Github size={20} />, href: 'https://github.com/inioluwa-xyz' },
-    { icon: <Twitter size={20} />, href: 'https://twitter.com/inioluwa_xyz' },
-    { icon: <Linkedin size={20} />, href: 'https://linkedin.com/in/inioluwa-oladipupo' },
-  ];
+  const { siteTitle, footer } = db.site;
+  const aboutShortText = db.about.shortText;
 
   const navLinks = [
     { href: '/', label: 'Home' },
@@ -23,10 +27,10 @@ export const Footer = () => {
           <div className="md:col-span-1">
             <div className="space-y-4">
               <Link href="/" className="mr-6 flex items-center space-x-2">
-                <span className="font-bold text-lg">Inioluwa.xyz</span>
+                <span className="font-bold text-lg">{siteTitle}</span>
               </Link>
               <p className="text-base text-foreground/70">
-                An architecture student and Web3 developer exploring the intersection of space, code, and community.
+                {aboutShortText.substring(0, 100)}...
               </p>
             </div>
           </div>
@@ -62,10 +66,10 @@ export const Footer = () => {
         </div>
         <div className="flex flex-col-reverse md:flex-row items-center justify-between mt-12 pt-8 border-t border-border/40">
           <p className="text-sm text-foreground/60 mt-4 md:mt-0">
-            &copy; {new Date().getFullYear()} Inioluwa Oladipupo. Designed with intention.
+            &copy; {new Date().getFullYear()} {siteTitle}. {footer.text}
           </p>
           <div className="flex items-center space-x-4">
-            {socialLinks.map((social, index) => (
+            {footer.socialLinks.map((social, index) => (
               <Link
                 key={index}
                 href={social.href}
@@ -73,7 +77,7 @@ export const Footer = () => {
                 rel="noopener noreferrer"
                 className="text-foreground/60 transition-colors hover:text-primary"
               >
-                {social.icon}
+                {socialIconMap[social.name] || <span>{social.name}</span>}
               </Link>
             ))}
           </div>

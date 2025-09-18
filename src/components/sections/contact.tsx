@@ -3,7 +3,7 @@
 import { z } from 'zod';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Linkedin, Twitter, Instagram, Mail, Send } from 'lucide-react';
+import { Linkedin, Twitter, Instagram, Mail, Send, Github } from 'lucide-react';
 import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
@@ -19,6 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { submitContactForm } from '@/app/actions';
+import { db } from '@/lib/data';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -26,21 +27,26 @@ const formSchema = z.object({
   message: z.string().min(10, { message: 'Message must be at least 10 characters.' }),
 });
 
-const socialLinks = [
-    { name: 'LinkedIn', icon: <Linkedin />, href: 'https://linkedin.com/in/inioluwa-oladipupo' },
-    { name: 'X', icon: <Twitter />, href: 'https://twitter.com/inioluwa_xyz' },
-    { name: 'Instagram', icon: <Instagram />, href: 'https://instagram.com/inioluwa.xyz' },
-    { name: 'Substack', icon:  (
+const socialIconMap = {
+    LinkedIn: <Linkedin />,
+    Twitter: <Twitter />,
+    Instagram: <Instagram />,
+    Github: <Github />,
+    Substack:  (
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <path d="M21.44 12.97l-9.45 6.49a1.5 1.5 0 01-2-.03l-9.39-6.49a1.5 1.5 0 010-2.93l9.4-6.52a1.5 1.5 0 012 0l9.45 6.52a1.5 1.5 0 010 2.96z"></path>
         <path d="M2.61 9.87l9.4 6.52a1.5 1.5 0 002 0l9.45-6.52"></path>
       </svg>
-    ), href: 'https://substack.com' },
-    { name: 'Email', icon: <Mail />, href: 'mailto:hello@inioluwa.xyz' },
-];
+    ), 
+    Email: <Mail />,
+} as const;
+
 
 export const Contact = () => {
   const { toast } = useToast();
+  const { introText, ctaLine } = db.contact;
+  const socialLinks = db.site.footer.socialLinks;
+  
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -73,16 +79,16 @@ export const Contact = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           <div className="flex flex-col justify-center">
             <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-4">
-              Let's Build Something Together
+              {introText}
             </h2>
             <p className="text-lg text-foreground/70 mb-8 max-w-lg">
-              From architectural design to decentralized applications, I collaborate on projects that push boundaries and create lasting value.
+              {ctaLine}
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((social) => (
                 <Button key={social.name} variant="outline" size="icon" asChild>
                   <Link href={social.href} target="_blank" aria-label={social.name}>
-                    {social.icon}
+                    {socialIconMap[social.name as keyof typeof socialIconMap]}
                   </Link>
                 </Button>
               ))}

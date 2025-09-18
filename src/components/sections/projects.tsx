@@ -5,7 +5,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { projects } from '@/lib/data';
+import { db } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '../ui/button';
 import { ArrowRight, Search } from 'lucide-react';
@@ -15,11 +15,13 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
     <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-12 text-center">{children}</h2>
 );
 
-export const Projects = () => {
+export const Projects = ({ isPage = false }: { isPage?: boolean }) => {
   const categories = ['All', 'Architecture', 'Web3', 'Writing', 'Community'];
 
   const [filter, setFilter] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
+  
+  const projects = db.projects.all();
 
   const filteredProjects = useMemo(() => {
     let categoryFiltered = filter === 'All' ? projects : projects.filter((p) => p.category === filter);
@@ -40,13 +42,13 @@ export const Projects = () => {
       return searchIn.includes(lowerCaseSearch);
     });
 
-  }, [filter, searchTerm]);
+  }, [filter, searchTerm, projects]);
 
 
   return (
     <section id="projects" className="py-24 md:py-32">
       <div className="container">
-        <SectionTitle>Featured Work</SectionTitle>
+        <SectionTitle>{isPage ? "Work" : "Featured Work"}</SectionTitle>
 
         <div className="max-w-2xl mx-auto mb-8">
             <div className="relative">

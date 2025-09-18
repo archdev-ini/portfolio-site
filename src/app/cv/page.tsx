@@ -2,7 +2,7 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Button } from '@/components/ui/button';
 import { Download, Briefcase, GraduationCap } from 'lucide-react';
-import { cvExperience, cvEducation } from '@/lib/data';
+import { db } from '@/lib/data';
 import type { CVItem } from '@/lib/data';
 
 const TimelineItem = ({ item, icon: Icon }: { item: CVItem, icon: React.ElementType }) => (
@@ -24,6 +24,9 @@ const TimelineItem = ({ item, icon: Icon }: { item: CVItem, icon: React.ElementT
 );
 
 export default function CVPage() {
+  const cvExperience = db.cv.experience();
+  const cvEducation = db.cv.education();
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />

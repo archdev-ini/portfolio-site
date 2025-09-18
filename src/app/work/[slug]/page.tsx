@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { projects } from '@/lib/data';
+import { db } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
@@ -17,13 +17,14 @@ import {
 } from "@/components/ui/carousel";
 
 export async function generateStaticParams() {
+  const projects = db.projects.all();
   return projects.map((project) => ({
     slug: project.slug,
   }));
 }
 
 export default function ProjectPage({ params }: { params: { slug: string } }) {
-  const project = projects.find((p) => p.slug === params.slug);
+  const project = db.projects.find(params.slug);
 
   if (!project) {
     notFound();

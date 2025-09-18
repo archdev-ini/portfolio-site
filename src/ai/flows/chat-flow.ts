@@ -9,18 +9,13 @@
 
 import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
-import {
-  projects,
-  journalPosts,
-  skills,
-  cvExperience,
-  cvEducation,
-} from '@/lib/data';
+import { db } from '@/lib/data';
 
 // Combine all data into a context string for the prompt
 const portfolioContext = `
   PROJECTS:
-  ${projects
+  ${db.projects
+    .all()
     .map(
       (p) =>
         `- ${p.title} (${p.category}): ${p.description}. Key details: ${p.overview}`
@@ -28,20 +23,23 @@ const portfolioContext = `
     .join('\n')}
 
   JOURNAL POSTS:
-  ${journalPosts.map((p) => `- ${p.title}: ${p.description}`).join('\n')}
+  ${db.journal.all().map((p) => `- ${p.title}: ${p.description}`).join('\n')}
 
   SKILLS:
-  ${skills
+  ${db.skills
+    .all()
     .map((s) => `- ${s.category}: ${s.items.join(', ')}`)
     .join('\n')}
 
   CV / EXPERIENCE:
-  ${cvExperience
+  ${db.cv
+    .experience()
     .map((item) => `- ${item.title} at ${item.subtitle} (${item.date}): ${item.description}`)
     .join('\n')}
 
   EDUCATION:
-  ${cvEducation
+  ${db.cv
+    .education()
     .map((item) => `- ${item.title} at ${item.subtitle} (${item.date}).`)
     .join('\n')}
 `;
