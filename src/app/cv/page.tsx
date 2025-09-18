@@ -7,9 +7,8 @@ import type { CVItem } from '@/lib/data';
 
 const TimelineItem = ({ item, icon: Icon }: { item: CVItem, icon: React.ElementType }) => (
   <div className="flex gap-8">
-    <div className="w-16 text-right text-sm text-foreground/60 pt-1 flex flex-col items-end">
-      <div className="font-semibold pb-2">{item.date.split(' ')[0]}</div>
-      <div>{item.date.split(' ')[2]}</div>
+    <div className="w-24 text-right text-sm text-foreground/60 pt-1 flex-shrink-0">
+      <p className="font-semibold">{item.date}</p>
     </div>
     <div className="relative pl-8">
       <div className="absolute left-[-10px] top-0 h-full w-px bg-border"></div>
@@ -52,29 +51,33 @@ export default async function CVPage() {
             </div>
 
             <div className="space-y-16">
-              <div>
-                <h2 className="text-3xl font-bold font-headline mb-8 flex items-center gap-4">
-                  <Briefcase className="w-8 h-8 text-primary/80" />
-                  Experience
-                </h2>
-                <div className="space-y-12">
-                  {cvExperience.map((item, index) => (
-                    <TimelineItem key={`exp-${index}`} item={item} icon={Briefcase} />
-                  ))}
+              {cvExperience.length > 0 && (
+                <div>
+                  <h2 className="text-3xl font-bold font-headline mb-8 flex items-center gap-4">
+                    <Briefcase className="w-8 h-8 text-primary/80" />
+                    Experience
+                  </h2>
+                  <div className="space-y-12">
+                    {cvExperience.map((item, index) => (
+                      <TimelineItem key={`exp-${index}`} item={item} icon={Briefcase} />
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
 
-              <div>
-                <h2 className="text-3xl font-bold font-headline mb-8 flex items-center gap-4">
-                  <GraduationCap className="w-8 h-8 text-primary/80" />
-                  Education
-                </h2>
-                <div className="space-y-12">
-                  {cvEducation.map((item, index) => (
-                    <TimelineItem key={`edu-${index}`} item={item} icon={GraduationCap} />
-                  ))}
+              {cvEducation.length > 0 && (
+                <div>
+                  <h2 className="text-3xl font-bold font-headline mb-8 flex items-center gap-4">
+                    <GraduationCap className="w-8 h-8 text-primary/80" />
+                    Education
+                  </h2>
+                  <div className="space-y-12">
+                    {cvEducation.map((item, index) => (
+                      <TimelineItem key={`edu-${index}`} item={item} icon={GraduationCap} />
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
 
           </div>

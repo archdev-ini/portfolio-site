@@ -8,98 +8,91 @@ if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
 const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
 
 const getRecords = async <T extends FieldSet>(tableName: string): Promise<Records<T>> => {
-  return new Promise((resolve) => {
-    const allRecords: Records<T> = [];
-    base(tableName)
-      .select({
-        // Add any default select options here, e.g., sorting
-      })
-      .eachPage(
-        (records, fetchNextPage) => {
-          allRecords.push(...records);
-          fetchNextPage();
-        },
-        (err) => {
-          if (err) {
-            console.warn(`[Airtable] Warning: Could not fetch records from table "${tableName}". It might be missing or misnamed. The app will proceed with empty data for this section. Error: ${err.message}`);
-            resolve([]); // Resolve with an empty array on error
-            return;
+    return new Promise((resolve, reject) => {
+      const allRecords: Records<T> = [];
+      base(tableName)
+        .select({
+          // Add any default select options here, e.g., sorting
+        })
+        .eachPage(
+          (records, fetchNextPage) => {
+            allRecords.push(...records);
+            fetchNextPage();
+          },
+          (err) => {
+            if (err) {
+              console.warn(`[Airtable] Warning: Could not fetch records from table "${tableName}". It might be missing or misnamed. The app will proceed with empty data for this section. Error: ${err.message}`);
+              resolve([]); // Resolve with an empty array on error to prevent crashing
+              return;
+            }
+            resolve(allRecords);
           }
-          resolve(allRecords);
-        }
-      );
-  });
+        );
+    });
 };
-
-
-const getRecord = async <T extends FieldSet>(tableName: string, recordId: string): Promise<T | null> => {
-    try {
-        const record = await base(tableName).find(recordId);
-        return record.fields as T;
-    } catch(err: any) {
-        console.warn(`[Airtable] Warning: Could not fetch record "${recordId}" from table "${tableName}". It might be missing. Error: ${err.message}`);
-        return null;
-    }
-}
 
 
 // Mapper Functions
 const mapToProject = (record: any): Project => ({
   id: record.id,
-  slug: record.fields.slug,
-  title: record.fields.title,
-  category: record.fields.category,
-  description: record.fields.description,
-  imageId: record.fields.imageId,
-  galleryImageIds: record.fields.galleryImageIds ? record.fields.galleryImageIds.split(',') : [],
-  link: record.fields.link || '#',
-  role: record.fields.role,
-  duration: record.fields.duration,
-  technologies: record.fields.technologies ? record.fields.technologies.split(',') : [],
-  overview: record.fields.overview,
-  process: record.fields.process,
-  outcomes: record.fields.outcomes,
-  featured: record.fields.featured || false,
+  slug: record.fields['Project Name'] ? record.fields['Project Name'].toLowerCase().replace(/\s+/g, '-') : record.id,
+  title: record.fields['Project Name'],
+  category: record.fields.Tags && record.fields.Tags.length > 0 ? record.fields.Tags[0] : 'Community', // Default or logic
+  description: record.fields.Description,
+  imageId: `project-arch-1`, // This needs to be mapped from your data
+  galleryImageIds: [],
+  link: '#',
+  role: 'N/A', // Not in new schema
+  duration: `${record.fields['Start Date']} - ${record.fields['End Date'] || 'Present'}`,
+  technologies: record.fields.Tags || [],
+  overview: record.fields.Description,
+  process: 'N/A', // Not in new schema
+  outcomes: 'N/A', // Not in new schema
+  featured: record.fields.Status === 'Completed', // Example logic
 });
 
 const mapToJournalPost = (record: any): JournalPost => ({
   id: record.id,
-  title: record.fields.title,
-  category: record.fields.category,
-  description: record.fields.description,
-  imageId: record.fields.imageId,
-  link: record.fields.link || '#',
+  title: record.fields.Title,
+  category: record.fields.Tags && record.fields.Tags.length > 0 ? record.fields.Tags[0] : 'Reflections',
+  description: record.fields.Content ? record.fields.Content.substring(0, 100) + '...' : '',
+  imageId: 'journal-1', // This needs to be mapped
+  link: '#', // Not in new schema
 });
 
 const mapToSkillCategory = (records: any[]): SkillCategory[] => {
-    const skillMap: { [key: string]: SkillCategory } = {};
-    const iconMap: { [key: string]: any } = { // You should import your icons here
-        'Architecture & Design': 'DraftingCompass',
-        'Web3 & Development': 'CodeXml',
-        'Writing & Community': 'Users'
+    const skillMap: { [key: string]: SkillCategory } = {
+      'Architecture & Design': { category: 'Architecture & Design', icon: 'DraftingCompass', items: [] },
+      'Web3 & Development': { category: 'Web3 & Development', icon: 'CodeXml', items: [] },
+      'Writing & Community': { category: 'Writing & Community', icon: 'Users', items: [] },
     };
 
     records.forEach(record => {
-        const category = record.fields.category;
-        if (!skillMap[category]) {
-            skillMap[category] = {
-                category: category,
-                icon: iconMap[category] || 'Users', // default icon
-                items: []
-            };
-        }
-        skillMap[category].items.push(record.fields.name);
+        const categoryArray = record.fields.Category || [];
+        const skillName = record.fields['Skill Name'];
+        categoryArray.forEach((category: string) => {
+          if (skillMap[category]) {
+              skillMap[category].items.push(skillName);
+          }
+        })
     });
 
-    return Object.values(skillMap);
+    return Object.values(skillMap).filter(cat => cat.items.length > 0);
 }
 
 
 const mapToCVItem = (record: any): CVItem => ({
-  date: record.fields.date,
-  title: record.fields.title,
-  subtitle: record.fields.subtitle,
-  description: record.fields.description,
+  date: `${record.fields['Start Date']} - ${record.fields['End Date'] || 'Present'}`,
+  title: record.fields.Position,
+  subtitle: record.fields.Company,
+  description: record.fields.Description,
+});
+
+const mapToEducationItem = (record: any): CVItem => ({
+    date: `${record.fields['Start Date']} - ${record.fields['End Date'] || 'Present'}`,
+    title: record.fields.Degree,
+    subtitle: record.fields.Institution,
+    description: record.fields.Description || `Studied ${record.fields['Field of Study']}.`,
 });
 
 
@@ -114,7 +107,7 @@ export const fetchJournalPosts = async (): Promise<JournalPost[]> => {
   return records.map(mapToJournalPost).sort((a,b) => b.id.localeCompare(a.id));
 };
 
-export const fetchSkills = async (): Promise<SkillCategory[]> => {
+export const fetchSkills = async (): Promise<any[]> => {
     const records = await getRecords('Skills');
     return mapToSkillCategory(records);
 };
@@ -126,7 +119,7 @@ export const fetchExperience = async (): Promise<CVItem[]> => {
 
 export const fetchEducation = async (): Promise<CVItem[]> => {
     const records = await getRecords('CV_Education');
-    return records.map(mapToCVItem);
+    return records.map(mapToEducationItem);
 }
 
 export const fetchSiteSettings = async (): Promise<any> => {
@@ -135,7 +128,7 @@ export const fetchSiteSettings = async (): Promise<any> => {
     const settings = records[0]?.fields;
     if (!settings) {
         console.warn("[Airtable] No record found in 'SiteSettings' table. Using fallback data.");
-        return { hero: {}, footer: { socialLinks: [] } };
+        return { hero: { headline: '', tagline: '', intro: '' }, footer: { socialLinks: [] } };
     }
     return {
         siteTitle: settings.siteTitle,
@@ -152,7 +145,7 @@ export const fetchSiteSettings = async (): Promise<any> => {
                 { name: 'LinkedIn', href: settings.socialLinkedIn },
                 { name: 'Substack', href: settings.socialSubstack },
                 { name: 'Email', href: `mailto:${settings.socialEmail}` },
-            ]
+            ].filter(link => link.href)
         }
     };
 }
@@ -174,20 +167,18 @@ export const fetchAboutContent = async (): Promise<any> => {
             { title: 'Web3 / Development', description: content.highlightWeb3 },
             { title: 'Writing', description: content.highlightWriting },
             { title: 'Community', description: content.highlightCommunity },
-        ],
+        ].filter(h => h.description),
         profileImageId: content.profileImageId
     };
 }
 
 export const fetchContactContent = async (): Promise<any> => {
     const records = await getRecords('Contact');
-    const content = records[0]?.fields; // Assuming one record
-     if (!content) {
-        console.warn("[Airtable] No record found in 'Contact' table. Using fallback data.");
-        return {};
-    }
+    const introRecord = records.find(r => r.fields.Label === 'introText');
+    const ctaRecord = records.find(r => r.fields.Label === 'ctaLine');
+
     return {
-        introText: content.introText,
-        ctaLine: content.ctaLine,
+        introText: introRecord ? introRecord.fields.Value : 'Get in Touch',
+        ctaLine: ctaRecord ? ctaRecord.fields.Value : 'Have a project in mind or want to connect? I’d love to hear from you.',
     };
 }
