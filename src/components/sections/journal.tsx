@@ -55,7 +55,7 @@ export const Journal = ({ posts, isPage = false }: { posts: JournalPost[], isPag
                         <div className="relative aspect-[16/10] w-full">
                           <Image
                             src={postImage.imageUrl}
-                            alt={post.title}
+                            alt={post.title || postImage.description}
                             fill
                             className="object-cover transition-transform duration-300 group-hover:scale-105"
                             data-ai-hint={postImage.imageHint}
@@ -90,7 +90,7 @@ export const Journal = ({ posts, isPage = false }: { posts: JournalPost[], isPag
                         <div className="relative aspect-[16/10] w-full">
                           <Image
                             src={postImage.imageUrl}
-                            alt={post.title}
+                            alt={post.title || postImage.description}
                             fill
                             className="object-cover transition-transform duration-300 group-hover:scale-105"
                             data-ai-hint={postImage.imageHint}
