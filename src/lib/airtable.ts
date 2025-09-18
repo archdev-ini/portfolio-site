@@ -8,7 +8,7 @@ if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
 const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
 
 const getRecords = async <T extends FieldSet>(tableName: string): Promise<Records<T>> => {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const allRecords: Records<T> = [];
     base(tableName)
       .select({
@@ -21,8 +21,8 @@ const getRecords = async <T extends FieldSet>(tableName: string): Promise<Record
         },
         (err) => {
           if (err) {
-            console.error(err);
-            reject(err);
+            console.warn(`[Airtable] Warning: Could not fetch records from table "${tableName}". It might be missing or misnamed. The app will proceed with empty data for this section. Error: ${err.message}`);
+            resolve([]); // Resolve with an empty array on error
             return;
           }
           resolve(allRecords);
@@ -32,9 +32,14 @@ const getRecords = async <T extends FieldSet>(tableName: string): Promise<Record
 };
 
 
-const getRecord = async <T extends FieldSet>(tableName: string, recordId: string): Promise<T> => {
-    const record = await base(tableName).find(recordId);
-    return record.fields as T;
+const getRecord = async <T extends FieldSet>(tableName: string, recordId: string): Promise<T | null> => {
+    try {
+        const record = await base(tableName).find(recordId);
+        return record.fields as T;
+    } catch(err: any) {
+        console.warn(`[Airtable] Warning: Could not fetch record "${recordId}" from table "${tableName}". It might be missing. Error: ${err.message}`);
+        return null;
+    }
 }
 
 
@@ -127,7 +132,11 @@ export const fetchEducation = async (): Promise<CVItem[]> => {
 export const fetchSiteSettings = async (): Promise<any> => {
     const records = await getRecords('SiteSettings');
     // Assuming single record for site-wide settings
-    const settings = records[0].fields;
+    const settings = records[0]?.fields;
+    if (!settings) {
+        console.warn("[Airtable] No record found in 'SiteSettings' table. Using fallback data.");
+        return { hero: {}, footer: { socialLinks: [] } };
+    }
     return {
         siteTitle: settings.siteTitle,
         hero: {
@@ -151,11 +160,15 @@ export const fetchSiteSettings = async (): Promise<any> => {
 
 export const fetchAboutContent = async (): Promise<any> => {
     const records = await getRecords('About');
-    const content = records[0].fields; // Assuming one record for about page content
+    const content = records[0]?.fields; // Assuming one record for about page content
+     if (!content) {
+        console.warn("[Airtable] No record found in 'About' table. Using fallback data.");
+        return { fullText: [], highlights: [] };
+    }
     return {
         headline: content.headline,
         shortText: content.shortText,
-        fullText: content.fullText.split('\\n'),
+        fullText: content.fullText ? content.fullText.split('\\n') : [],
         highlights: [
             { title: 'Architecture', description: content.highlightArchitecture },
             { title: 'Web3 / Development', description: content.highlightWeb3 },
@@ -168,7 +181,11 @@ export const fetchAboutContent = async (): Promise<any> => {
 
 export const fetchContactContent = async (): Promise<any> => {
     const records = await getRecords('Contact');
-    const content = records[0].fields; // Assuming one record
+    const content = records[0]?.fields; // Assuming one record
+     if (!content) {
+        console.warn("[Airtable] No record found in 'Contact' table. Using fallback data.");
+        return {};
+    }
     return {
         introText: content.introText,
         ctaLine: content.ctaLine,

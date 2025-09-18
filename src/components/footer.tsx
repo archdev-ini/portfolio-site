@@ -30,7 +30,7 @@ export const Footer = () => {
                 <span className="font-bold text-lg">{siteTitle}</span>
               </Link>
               <p className="text-base text-foreground/70">
-                {aboutShortText.substring(0, 100)}...
+                {aboutShortText ? `${aboutShortText.substring(0, 100)}...` : ''}
               </p>
             </div>
           </div>
