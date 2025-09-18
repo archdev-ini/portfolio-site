@@ -7,29 +7,37 @@ import { Skills } from '@/components/sections/skills';
 import { Contact } from '@/components/sections/contact';
 import { AboutPreview } from '@/components/sections/about-preview-section';
 import { ScrollAnimation } from '@/components/scroll-animation';
+import { db } from '@/lib/data';
 
-export default function Home() {
+export default async function Home() {
+  const siteSettings = await db.getSiteSettings();
+  const aboutContent = await db.getAboutContent();
+  const projects = await db.getProjects();
+  const journalPosts = await db.getJournalPosts();
+  const skills = await db.getSkills();
+  const contactContent = await db.getContactContent();
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-1">
         <ScrollAnimation>
-          <Hero />
+          <Hero hero={siteSettings.hero} />
         </ScrollAnimation>
         <ScrollAnimation>
-          <AboutPreview />
+          <AboutPreview about={aboutContent} />
         </ScrollAnimation>
         <ScrollAnimation>
-          <WorkPreview />
+          <WorkPreview projects={projects} />
         </ScrollAnimation>
         <ScrollAnimation>
-          <Journal />
+          <Journal posts={journalPosts} />
         </ScrollAnimation>
         <ScrollAnimation>
-          <Skills />
+          <Skills skills={skills} />
         </ScrollAnimation>
         <ScrollAnimation>
-          <Contact />
+          <Contact contact={contactContent} site={siteSettings} />
         </ScrollAnimation>
       </main>
       <Footer />

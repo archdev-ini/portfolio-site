@@ -11,38 +11,41 @@ import {ai} from '@/ai/genkit';
 import {z} from 'genkit';
 import { db } from '@/lib/data';
 
-// Combine all data into a context string for the prompt
-const portfolioContext = `
-  PROJECTS:
-  ${db.projects
-    .all()
-    .map(
-      (p) =>
-        `- ${p.title} (${p.category}): ${p.description}. Key details: ${p.overview}`
-    )
-    .join('\n')}
+async function getPortfolioContext() {
+  const projects = await db.getProjects();
+  const journalPosts = await db.getJournalPosts();
+  const skills = await db.getSkills();
+  const cvExperience = await db.getCVExperience();
+  const cvEducation = await db.getCVEducation();
 
-  JOURNAL POSTS:
-  ${db.journal.all().map((p) => `- ${p.title}: ${p.description}`).join('\n')}
+  return `
+    PROJECTS:
+    ${projects
+      .map(
+        (p) =>
+          `- ${p.title} (${p.category}): ${p.description}. Key details: ${p.overview}`
+      )
+      .join('\n')}
 
-  SKILLS:
-  ${db.skills
-    .all()
-    .map((s) => `- ${s.category}: ${s.items.join(', ')}`)
-    .join('\n')}
+    JOURNAL POSTS:
+    ${journalPosts.map((p) => `- ${p.title}: ${p.description}`).join('\n')}
 
-  CV / EXPERIENCE:
-  ${db.cv
-    .experience()
-    .map((item) => `- ${item.title} at ${item.subtitle} (${item.date}): ${item.description}`)
-    .join('\n')}
+    SKILLS:
+    ${skills
+      .map((s) => `- ${s.category}: ${s.items.join(', ')}`)
+      .join('\n')}
 
-  EDUCATION:
-  ${db.cv
-    .education()
-    .map((item) => `- ${item.title} at ${item.subtitle} (${item.date}).`)
-    .join('\n')}
-`;
+    CV / EXPERIENCE:
+    ${cvExperience
+      .map((item) => `- ${item.title} at ${item.subtitle} (${item.date}): ${item.description}`)
+      .join('\n')}
+
+    EDUCATION:
+    ${cvEducation
+      .map((item) => `- ${item.title} at ${item.subtitle} (${item.date}).`)
+      .join('\n')}
+  `;
+}
 
 const ChatInputSchema = z.object({
   messages: z.array(z.object({
@@ -98,36 +101,6 @@ const checkAvailabilityTool = ai.defineTool(
 );
 
 
-const prompt = ai.definePrompt({
-  name: 'chatPrompt',
-  input: {schema: ChatInputSchema},
-  output: {format: 'text'},
-  tools: [sendMessageTool, checkAvailabilityTool],
-  prompt: `You are a friendly and helpful AI assistant for Inioluwa Oladipupo's personal portfolio website. Your name is "Inio-Bot".
-
-  Your goal is to answer questions from visitors about Inioluwa's work, skills, and experience in a concise and conversational manner. You can also make friendly conversation.
-
-  If a user wants to contact Inioluwa, ask for their name, email, and message. Then, use the \`sendMessage\` tool to forward the message. Do not ask for information you already have.
-
-  If a user wants to schedule a meeting or call, use the \`checkAvailability\` tool to see when Inioluwa is free and present the options to the user.
-
-  Use the following context about Inioluwa's portfolio to answer questions. Do not make up information. If you don't know the answer, say that you don't have that information but can pass the message along to Inioluwa.
-
-  Keep your answers to a maximum of 3-4 sentences.
-
-  CONTEXT:
-  ---
-  ${portfolioContext}
-  ---
-
-  CONVERSATION HISTORY:
-  {{#each messages}}
-    {{role}}: {{content}}
-  {{/each}}
-  
-  ASSISTANT:`,
-});
-
 const chatFlow = ai.defineFlow(
   {
     name: 'chatFlow',
@@ -135,6 +108,38 @@ const chatFlow = ai.defineFlow(
     outputSchema: z.string(),
   },
   async (input) => {
+    const portfolioContext = await getPortfolioContext();
+
+    const prompt = ai.definePrompt({
+      name: 'chatPrompt',
+      input: {schema: ChatInputSchema},
+      output: {format: 'text'},
+      tools: [sendMessageTool, checkAvailabilityTool],
+      prompt: `You are a friendly and helpful AI assistant for Inioluwa Oladipupo's personal portfolio website. Your name is "Inio-Bot".
+
+      Your goal is to answer questions from visitors about Inioluwa's work, skills, and experience in a concise and conversational manner. You can also make friendly conversation.
+
+      If a user wants to contact Inioluwa, ask for their name, email, and message. Then, use the \`sendMessage\` tool to forward the message. Do not ask for information you already have.
+
+      If a user wants to schedule a meeting or call, use the \`checkAvailability\` tool to see when Inioluwa is free and present the options to the user.
+
+      Use the following context about Inioluwa's portfolio to answer questions. Do not make up information. If you don't know the answer, say that you don't have that information but can pass the message along to Inioluwa.
+
+      Keep your answers to a maximum of 3-4 sentences.
+
+      CONTEXT:
+      ---
+      ${portfolioContext}
+      ---
+
+      CONVERSATION HISTORY:
+      {{#each messages}}
+        {{role}}: {{content}}
+      {{/each}}
+      
+      ASSISTANT:`,
+    });
+
     const {output} = await prompt(input);
     return output!;
   }

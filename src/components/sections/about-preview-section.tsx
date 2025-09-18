@@ -3,10 +3,10 @@ import { Button } from '@/components/ui/button';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
-import { db } from '@/lib/data';
+import type { AboutContent } from '@/lib/data';
 
-export const AboutPreview = () => {
-    const { shortText, profileImageId } = db.about;
+export const AboutPreview = ({ about }: { about: AboutContent }) => {
+    const { shortText, profileImageId } = about;
     const aboutImage = PlaceHolderImages.find(img => img.id === profileImageId);
 
   return (

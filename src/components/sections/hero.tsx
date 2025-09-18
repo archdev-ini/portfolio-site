@@ -1,10 +1,9 @@
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { MoveRight } from 'lucide-react';
-import { db } from '@/lib/data';
+import type { SiteSettings } from '@/lib/data';
 
-export const Hero = () => {
-  const { hero } = db.site;
+export const Hero = ({ hero }: { hero: SiteSettings['hero'] }) => {
   return (
     <section id="hero" className="py-24 md:py-40">
       <div className="container text-center">

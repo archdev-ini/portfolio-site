@@ -4,23 +4,23 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { db } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowRight, MoveRight } from 'lucide-react';
 import { Button } from '../ui/button';
+import type { JournalPost } from '@/lib/data';
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
     <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-4 text-center">{children}</h2>
 );
 
-export const Journal = ({ isPage = false }: { isPage?: boolean }) => {
+export const Journal = ({ posts, isPage = false }: { posts: JournalPost[], isPage?: boolean }) => {
   const categories = ['All', 'Reflections', 'Experiments', 'Design Notes'];
   const [filter, setFilter] = useState('All');
   
-  const allPosts = db.journal.all();
-  const displayedPosts = isPage ? allPosts : db.journal.latest(3);
+  const allPosts = posts;
+  const displayedPosts = isPage ? allPosts : allPosts.slice(0, 3);
   const filteredPosts = filter === 'All' ? displayedPosts : displayedPosts.filter((p) => p.category === filter);
 
   return (

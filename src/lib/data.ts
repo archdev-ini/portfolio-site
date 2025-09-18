@@ -78,48 +78,25 @@ export type ContactContent = {
     ctaLine: string;
 }
 
-const siteSettings = await fetchSiteSettings();
-const aboutContent = await fetchAboutContent();
-const contactContent = await fetchContactContent();
-const projects = await fetchProjects();
-const journalPosts = await fetchJournalPosts();
-const skills = await fetchSkills();
-const cvExperience = await fetchExperience();
-const cvEducation = await fetchEducation();
-
-
-// Replace imported icons with actual components
-const iconMap = {
-    'Architecture & Design': DraftingCompass,
-    'Web3 & Development': CodeXml,
-    'Writing & Community': Users
-} as const;
-
-const mappedSkills = skills.map(skill => ({
-    ...skill,
-    icon: iconMap[skill.category as keyof typeof iconMap] || Users,
-}));
-
-
-// "Database" object
+// "Database" object with functions to fetch data on the server
 export const db = {
-    site: siteSettings,
-    about: aboutContent,
-    contact: contactContent,
-    projects: {
-        find: (slug: string) => projects.find(p => p.slug === slug),
-        all: () => projects,
-        featured: () => projects.filter(p => p.featured),
+    getSiteSettings: async () => await fetchSiteSettings(),
+    getAboutContent: async () => await fetchAboutContent(),
+    getContactContent: async () => await fetchContactContent(),
+    getProjects: async () => await fetchProjects(),
+    getJournalPosts: async () => await fetchJournalPosts(),
+    getSkills: async () => {
+        const skills = await fetchSkills();
+        const iconMap = {
+            'Architecture & Design': DraftingCompass,
+            'Web3 & Development': CodeXml,
+            'Writing & Community': Users
+        } as const;
+        return skills.map(skill => ({
+            ...skill,
+            icon: iconMap[skill.category as keyof typeof iconMap] || Users,
+        }));
     },
-    journal: {
-        all: () => journalPosts,
-        latest: (count: number) => journalPosts.slice(0, count),
-    },
-    skills: {
-        all: () => mappedSkills,
-    },
-    cv: {
-        experience: () => cvExperience,
-        education: () => cvEducation,
-    }
-}
+    getCVExperience: async () => await fetchExperience(),
+    getCVEducation: async () => await fetchEducation(),
+};

@@ -1,12 +1,11 @@
-import { db } from '@/lib/data';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import type { SkillCategory } from '@/lib/data';
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
     <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-12 text-center">{children}</h2>
 );
 
-export const Skills = () => {
-  const skills = db.skills.all();
+export const Skills = ({ skills }: { skills: SkillCategory[] }) => {
   return (
     <section id="skills" className="py-24 md:py-32">
       <div className="container">

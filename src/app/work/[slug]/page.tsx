@@ -17,14 +17,15 @@ import {
 } from "@/components/ui/carousel";
 
 export async function generateStaticParams() {
-  const projects = db.projects.all();
+  const projects = await db.getProjects();
   return projects.map((project) => ({
     slug: project.slug,
   }));
 }
 
-export default function ProjectPage({ params }: { params: { slug: string } }) {
-  const project = db.projects.find(params.slug);
+export default async function ProjectPage({ params }: { params: { slug: string } }) {
+  const projects = await db.getProjects();
+  const project = projects.find(p => p.slug === params.slug);
 
   if (!project) {
     notFound();

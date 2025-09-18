@@ -12,8 +12,8 @@ import { cn } from '@/lib/utils';
 import { ThemeToggle } from './theme-toggle';
 import { db } from '@/lib/data';
 
-export const Header = () => {
-  const { siteTitle } = db.site;
+export const Header = async () => {
+  const { siteTitle } = await db.getSiteSettings();
   const navLinks = [
     { href: '/about', label: 'About' },
     { href: '/work', label: 'Work' },

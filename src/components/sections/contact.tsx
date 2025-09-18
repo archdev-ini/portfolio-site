@@ -19,7 +19,7 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { submitContactForm } from '@/app/actions';
-import { db } from '@/lib/data';
+import type { ContactContent, SiteSettings } from '@/lib/data';
 
 const formSchema = z.object({
   name: z.string().min(2, { message: 'Name must be at least 2 characters.' }),
@@ -42,10 +42,10 @@ const socialIconMap = {
 } as const;
 
 
-export const Contact = () => {
+export const Contact = ({ contact, site }: { contact: ContactContent, site: SiteSettings }) => {
   const { toast } = useToast();
-  const { introText, ctaLine } = db.contact;
-  const socialLinks = db.site.footer.socialLinks;
+  const { introText, ctaLine } = contact;
+  const socialLinks = site.footer.socialLinks;
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),

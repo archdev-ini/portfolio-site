@@ -1,17 +1,17 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { db } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '../ui/button';
 import { ArrowRight, MoveRight } from 'lucide-react';
+import type { Project } from '@/lib/data';
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
     <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-12 text-center">{children}</h2>
 );
 
-export const WorkPreview = () => {
-  const featuredProjects = db.projects.featured();
+export const WorkPreview = ({ projects }: { projects: Project[] }) => {
+  const featuredProjects = projects.filter(p => p.featured);
 
   return (
     <section id="work" className="py-24 md:py-32 bg-secondary/30">

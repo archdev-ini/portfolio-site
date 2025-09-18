@@ -5,23 +5,21 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { db } from '@/lib/data';
 import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { Button } from '../ui/button';
 import { ArrowRight, Search } from 'lucide-react';
 import { Input } from '../ui/input';
+import type { Project } from '@/lib/data';
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
     <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-12 text-center">{children}</h2>
 );
 
-export const Projects = ({ isPage = false }: { isPage?: boolean }) => {
+export const Projects = ({ projects, isPage = false }: { projects: Project[], isPage?: boolean }) => {
   const categories = ['All', 'Architecture', 'Web3', 'Writing', 'Community'];
 
   const [filter, setFilter] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
-  
-  const projects = db.projects.all();
 
   const filteredProjects = useMemo(() => {
     let categoryFiltered = filter === 'All' ? projects : projects.filter((p) => p.category === filter);

@@ -23,9 +23,9 @@ const TimelineItem = ({ item, icon: Icon }: { item: CVItem, icon: React.ElementT
   </div>
 );
 
-export default function CVPage() {
-  const cvExperience = db.cv.experience();
-  const cvEducation = db.cv.education();
+export default async function CVPage() {
+  const cvExperience = await db.getCVExperience();
+  const cvEducation = await db.getCVEducation();
 
   return (
     <div className="flex flex-col min-h-screen">

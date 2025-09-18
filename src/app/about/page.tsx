@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { db } from '@/lib/data';
 
-export default function AboutPage() {
-  const { headline, fullText, highlights, profileImageId } = db.about;
+export default async function AboutPage() {
+  const { headline, fullText, highlights, profileImageId } = await db.getAboutContent();
   const aboutImage = PlaceHolderImages.find(img => img.id === profileImageId);
 
   return (

@@ -8,9 +8,9 @@ const socialIconMap: { [key: string]: React.ReactNode } = {
   LinkedIn: <Linkedin size={20} />,
 };
 
-export const Footer = () => {
-  const { siteTitle, footer } = db.site;
-  const aboutShortText = db.about.shortText;
+export const Footer = async () => {
+  const { siteTitle, footer } = await db.getSiteSettings();
+  const { shortText: aboutShortText } = await db.getAboutContent();
 
   const navLinks = [
     { href: '/', label: 'Home' },
