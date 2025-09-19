@@ -53,6 +53,7 @@ export type SocialLink = {
 }
 
 export type SiteSettings = {
+    id: string;
     siteTitle: string;
     hero: {
         headline: string;
@@ -80,46 +81,11 @@ export type ContactContent = {
 
 // "Database" object with functions to fetch data on the server
 export const db = {
-    getSiteSettings: async () => {
-        try {
-            return await fetchSiteSettings();
-        } catch (e) {
-            console.error("Error fetching site settings:", e);
-            return { siteTitle: "Inioluwa.xyz", hero: { headline: 'Error', tagline: 'Error', intro: 'Could not load content.'}, footer: { text: '', socialLinks: [] } };
-        }
-    },
-    getAboutContent: async () => {
-        try {
-            return await fetchAboutContent();
-        } catch (e) {
-            console.error("Error fetching about content:", e);
-            return { headline: 'Error', shortText: 'Could not load content.', fullText: [], highlights: [], profileImageId: '' };
-        }
-    },
-    getContactContent: async () => {
-        try {
-            return await fetchContactContent();
-        } catch (e) {
-            console.error("Error fetching contact content:", e);
-            return { introText: 'Error', ctaLine: 'Could not load content.' };
-        }
-    },
-    getProjects: async () => {
-        try {
-            return await fetchProjects();
-        } catch (e) {
-            console.error("Error fetching projects:", e);
-            return [];
-        }
-    },
-    getJournalPosts: async () => {
-        try {
-            return await fetchJournalPosts();
-        } catch (e) {
-            console.error("Error fetching journal posts:", e);
-            return [];
-        }
-    },
+    getSiteSettings: fetchSiteSettings,
+    getAboutContent: fetchAboutContent,
+    getContactContent: fetchContactContent,
+    getProjects: fetchProjects,
+    getJournalPosts: fetchJournalPosts,
     getSkills: async (): Promise<SkillCategory[]> => {
         try {
             const skills = await fetchSkills();
@@ -137,20 +103,6 @@ export const db = {
             return [];
         }
     },
-    getCVExperience: async () => {
-        try {
-            return await fetchExperience();
-        } catch (e) {
-            console.error("Error fetching CV experience:", e);
-            return [];
-        }
-    },
-    getCVEducation: async () => {
-        try {
-            return await fetchEducation();
-        } catch (e) {
-            console.error("Error fetching CV education:", e);
-            return [];
-        }
-    },
+    getCVExperience: fetchExperience,
+    getCVEducation: fetchEducation,
 };
