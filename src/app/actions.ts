@@ -4,8 +4,13 @@ import { z } from 'zod';
 import { chat } from '@/ai/flows/chat-flow';
 import type { ChatInput } from '@/ai/flows/chat-flow';
 import { revalidatePath } from 'next/cache';
-import { updateSiteSettings } from '@/lib/airtable';
-import type { SiteSettings } from '@/lib/data';
+import {
+  updateSiteSettings,
+  createRecord,
+  updateRecord,
+  deleteRecord,
+} from '@/lib/airtable';
+import type { SiteSettings, Project, JournalPost } from '@/lib/data';
 
 const contactFormSchema = z.object({
   name: z.string(),
@@ -52,3 +57,78 @@ export async function updateSiteSettingsAction(id: string, values: SiteSettings)
     };
   }
 }
+
+// Project Actions
+export async function createProject(data: Omit<Project, 'id'>) {
+  try {
+    await createRecord('Projects', data);
+    revalidatePath('/work');
+    revalidatePath('/admin');
+    return { success: true, message: 'Project created successfully.' };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: 'Failed to create project.' };
+  }
+}
+
+export async function updateProject(id: string, data: Partial<Omit<Project, 'id'>>) {
+  try {
+    await updateRecord('Projects', id, data);
+    revalidatePath(`/work/${data.slug}`);
+    revalidatePath('/work');
+    revalidatePath('/admin');
+    return { success: true, message: 'Project updated successfully.' };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: 'Failed to update project.' };
+  }
+}
+
+export async function deleteProject(id: string) {
+  try {
+    await deleteRecord('Projects', id);
+    revalidatePath('/work');
+    revalidatePath('/admin');
+    return { success: true, message: 'Project deleted successfully.' };
+  } catch (error) {
+    console.error(error);
+    return { success: false, message: 'Failed to delete project.' };
+  }
+}
+
+// Journal Actions
+export async function createJournalPost(data: Omit<JournalPost, 'id'>) {
+    try {
+      await createRecord('Journal', data);
+      revalidatePath('/journal');
+      revalidatePath('/admin');
+      return { success: true, message: 'Journal post created successfully.' };
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: 'Failed to create journal post.' };
+    }
+  }
+  
+  export async function updateJournalPost(id: string, data: Partial<Omit<JournalPost, 'id'>>) {
+    try {
+      await updateRecord('Journal', id, data);
+      revalidatePath('/journal');
+      revalidatePath('/admin');
+      return { success: true, message: 'Journal post updated successfully.' };
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: 'Failed to update journal post.' };
+    }
+  }
+  
+  export async function deleteJournalPost(id: string) {
+    try {
+      await deleteRecord('Journal', id);
+      revalidatePath('/journal');
+      revalidatePath('/admin');
+      return { success: true, message: 'Journal post deleted successfully.' };
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: 'Failed to delete journal post.' };
+    }
+  }

@@ -17,8 +17,25 @@ const getRecords = async <T extends FieldSet>(tableName: string): Promise<Record
     }
 };
 
-const updateRecord = async (tableName: string, recordId: string, fields: { [key: string]: any }) => {
+export const createRecord = async (tableName: string, fields: { [key: string]: any }) => {
     try {
+        const createdRecords = await base(tableName).create([{ fields }]);
+        return createdRecords[0];
+    } catch (err: any) {
+        console.error(`[Airtable] Error creating record in table "${tableName}": ${err.message}`);
+        throw err;
+    }
+}
+
+export const updateRecord = async (tableName: string, recordId: string, fields: { [key: string]: any }) => {
+    try {
+        // Airtable API expects comma-separated fields to be arrays, so we convert them back
+        if (fields.technologies && Array.isArray(fields.technologies)) {
+            fields.technologies = fields.technologies.join(',');
+        }
+        if (fields.galleryImageIds && Array.isArray(fields.galleryImageIds)) {
+            fields.galleryImageIds = fields.galleryImageIds.join(',');
+        }
         const updatedRecords = await base(tableName).update([{ id: recordId, fields }]);
         return updatedRecords[0];
     } catch (err: any) {
@@ -26,6 +43,15 @@ const updateRecord = async (tableName: string, recordId: string, fields: { [key:
         throw err;
     }
 };
+
+export const deleteRecord = async (tableName: string, recordId: string) => {
+    try {
+        await base(tableName).destroy([recordId]);
+    } catch (err: any) {
+        console.error(`[Airtable] Error deleting record in table "${tableName}": ${err.message}`);
+        throw err;
+    }
+}
 
 
 // Mapper Functions
@@ -40,7 +66,7 @@ const mapToProject = (record: any): Project => ({
   link: record.fields.link || '#',
   role: record.fields.role || 'N/A',
   duration: record.fields.duration || 'N/A',
-  technologies: record.fields.technologies ? record.fields.technologies.split(',') : [],
+  technologies: record.fields.technologies ? record.fields.technologies.split(',').map((s:string) => s.trim()) : [],
   overview: record.fields.overview,
   process: record.fields.process,
   outcomes: record.fields.outcomes,

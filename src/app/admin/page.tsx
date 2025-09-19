@@ -4,6 +4,7 @@ import { AdminForm } from './_components/admin-form';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ProjectsList } from './_components/projects-list';
+import { JournalList } from './_components/journal-list';
 
 export default async function AdminPage({
   searchParams,
@@ -18,6 +19,7 @@ export default async function AdminPage({
 
   const siteSettings = await db.getSiteSettings();
   const projects = await db.getProjects();
+  const journalPosts = await db.getJournalPosts();
   // We can add fetching for other data here as we build more forms
 
   return (
@@ -88,7 +90,7 @@ export default async function AdminPage({
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                           <p>Journal management UI will go here.</p>
+                           <JournalList posts={journalPosts} />
                         </CardContent>
                     </Card>
                 </TabsContent>
