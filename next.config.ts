@@ -36,9 +36,6 @@ const nextConfig: NextConfig = {
       }
     ],
   },
-  experimental: {
-    topLevelAwait: true
-  }
 };
 
 export default nextConfig;
