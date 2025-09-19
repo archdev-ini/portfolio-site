@@ -9,8 +9,9 @@ import {
   createRecord,
   updateRecord,
   deleteRecord,
+  updateAboutContent,
 } from '@/lib/airtable';
-import type { SiteSettings, Project, JournalPost } from '@/lib/data';
+import type { SiteSettings, Project, JournalPost, AboutContent } from '@/lib/data';
 
 const contactFormSchema = z.object({
   name: z.string(),
@@ -57,6 +58,25 @@ export async function updateSiteSettingsAction(id: string, values: SiteSettings)
     };
   }
 }
+
+export async function updateAboutContentAction(id: string, values: AboutContent) {
+    try {
+      await updateAboutContent(id, values);
+      revalidatePath('/about');
+      revalidatePath('/');
+      revalidatePath('/admin');
+      return {
+        success: true,
+        message: 'About page content updated successfully!',
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        success: false,
+        message: 'Failed to update about page content.',
+      };
+    }
+  }
 
 // Project Actions
 export async function createProject(data: Omit<Project, 'id'>) {

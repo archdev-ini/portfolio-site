@@ -41,6 +41,7 @@ export type SkillCategory = {
 };
 
 export type CVItem = {
+  id: string;
   date: string;
   title: string;
   subtitle: string;
@@ -67,6 +68,7 @@ export type SiteSettings = {
 };
 
 export type AboutContent = {
+    id: string;
     headline: string;
     shortText: string;
     fullText: string[];

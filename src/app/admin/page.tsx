@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { db } from '@/lib/data';
 import { AdminForm } from './_components/admin-form';
+import { AboutForm } from './_components/about-form';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ProjectsList } from './_components/projects-list';
@@ -18,6 +19,7 @@ export default async function AdminPage({
   }
 
   const siteSettings = await db.getSiteSettings();
+  const aboutContent = await db.getAboutContent();
   const projects = await db.getProjects();
   const journalPosts = await db.getJournalPosts();
   // We can add fetching for other data here as we build more forms
@@ -28,7 +30,7 @@ export default async function AdminPage({
             <h1 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-12">
                 Admin Panel
             </h1>
-            <Tabs defaultValue="siteSettings">
+            <Tabs defaultValue="siteSettings" className="w-full">
                 <TabsList className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 mb-8">
                     <TabsTrigger value="siteSettings">Site Settings</TabsTrigger>
                     <TabsTrigger value="about">About Page</TabsTrigger>
@@ -62,7 +64,7 @@ export default async function AdminPage({
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                           <p>About form will go here.</p>
+                           <AboutForm aboutContent={aboutContent} />
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -91,6 +93,48 @@ export default async function AdminPage({
                         </CardHeader>
                         <CardContent>
                            <JournalList posts={journalPosts} />
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="skills">
+                     <Card>
+                        <CardHeader>
+                            <CardTitle>Manage Skills</CardTitle>
+                            <CardDescription>
+                                Add, edit, or delete skills.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                           <p>Skills management UI will go here.</p>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                <TabsContent value="cv">
+                     <Card>
+                        <CardHeader>
+                            <CardTitle>Manage CV</CardTitle>
+                            <CardDescription>
+                                Add, edit, or delete experience and education entries.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                           <p>CV management UI will go here.</p>
+                        </CardContent>
+                    </Card>
+                </TabsContent>
+
+                 <TabsContent value="contact">
+                     <Card>
+                        <CardHeader>
+                            <CardTitle>Contact Page</CardTitle>
+                            <CardDescription>
+                                Update the content for the contact section.
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent>
+                           <p>Contact form will go here.</p>
                         </CardContent>
                     </Card>
                 </TabsContent>

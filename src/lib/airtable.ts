@@ -210,7 +210,7 @@ export const fetchAboutContent = async (): Promise<any> => {
         id: record.id,
         headline: content.headline,
         shortText: content.shortText,
-        fullText: content.fullText ? content.fullText.split('\n') : [],
+        fullText: content.fullText ? content.fullText.split('\\n') : [],
         highlights: [
             { title: 'Architecture', description: content.highlightArchitecture },
             { title: 'Web3 / Development', description: content.highlightWeb3 },
@@ -220,6 +220,26 @@ export const fetchAboutContent = async (): Promise<any> => {
         profileImageId: content.profileImageId
     };
 }
+
+export const updateAboutContent = async (id: string, data: Partial<AboutContent>) => {
+    const fieldsToUpdate: { [key: string]: any } = {};
+  
+    if (data.headline) fieldsToUpdate.headline = data.headline;
+    if (data.shortText) fieldsToUpdate.shortText = data.shortText;
+    if (data.fullText) fieldsToUpdate.fullText = data.fullText.join('\\n');
+    if (data.profileImageId) fieldsToUpdate.profileImageId = data.profileImageId;
+  
+    if (data.highlights) {
+      data.highlights.forEach(highlight => {
+        if (highlight.title === 'Architecture') fieldsToUpdate.highlightArchitecture = highlight.description;
+        if (highlight.title === 'Web3 / Development') fieldsToUpdate.highlightWeb3 = highlight.description;
+        if (highlight.title === 'Writing') fieldsToUpdate.highlightWriting = highlight.description;
+        if (highlight.title === 'Community') fieldsToUpdate.highlightCommunity = highlight.description;
+      });
+    }
+  
+    return await updateRecord('About', id, fieldsToUpdate);
+};
 
 export const fetchContactContent = async (): Promise<any> => {
     const records = await getRecords('Contact');
