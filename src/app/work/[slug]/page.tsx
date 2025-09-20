@@ -1,3 +1,4 @@
+
 import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { db } from '@/lib/data';
@@ -18,9 +19,12 @@ import {
 
 export async function generateStaticParams() {
   const projects = await db.getProjects();
-  return projects.map((project) => ({
-    slug: project.slug,
-  }));
+  // Filter out projects that don't have a slug to prevent build errors
+  return projects
+    .filter(project => project.slug)
+    .map((project) => ({
+      slug: project.slug,
+    }));
 }
 
 export default async function ProjectPage({ params }: { params: { slug: string } }) {
