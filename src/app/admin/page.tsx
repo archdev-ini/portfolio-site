@@ -1,4 +1,3 @@
-import { notFound } from 'next/navigation';
 import { db } from '@/lib/data';
 import { AdminForm } from './_components/admin-form';
 import { AboutForm } from './_components/about-form';
@@ -12,17 +11,7 @@ import { EducationList } from './_components/education-list';
 import { ExperienceList } from './_components/experience-list';
 
 
-export default async function AdminPage({
-  searchParams,
-}: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) {
-  const secret = searchParams.secret;
-
-  if (secret !== process.env.ADMIN_SECRET_KEY) {
-    notFound();
-  }
-
+export default async function AdminPage() {
   const siteSettings = await db.getSiteSettings();
   const aboutContent = await db.getAboutContent();
   const projects = await db.getProjects();
@@ -150,7 +139,7 @@ export default async function AdminPage({
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                           <ContactForm content={contactContent} />
+                           <ContactContentForm content={contactContent} />
                         </CardContent>
                     </Card>
                 </TabsContent>
