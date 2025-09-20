@@ -17,6 +17,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { updateContactContentAction } from '@/app/actions';
 import type { ContactContent } from '@/lib/data';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   introText: z.string().min(1, 'Intro text is required'),
@@ -72,6 +73,7 @@ export function ContactForm({ content }: ContactFormProps) {
         </div>
 
         <Button type="submit" disabled={form.formState.isSubmitting} size="lg">
+          {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {form.formState.isSubmitting ? 'Saving...' : 'Save Changes'}
         </Button>
       </form>

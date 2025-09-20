@@ -17,6 +17,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { useToast } from '@/hooks/use-toast';
 import { updateAboutContentAction } from '@/app/actions';
 import type { AboutContent } from '@/lib/data';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   headline: z.string(),
@@ -115,6 +116,7 @@ export function AboutForm({ aboutContent }: { aboutContent: AboutContent }) {
         </div>
 
         <Button type="submit" disabled={form.formState.isSubmitting} size="lg">
+          {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
           {form.formState.isSubmitting ? 'Saving...' : 'Save Changes'}
         </Button>
       </form>

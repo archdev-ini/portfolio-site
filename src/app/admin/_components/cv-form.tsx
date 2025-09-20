@@ -26,6 +26,7 @@ import { useToast } from '@/hooks/use-toast';
 import { createCVItem, updateCVItem } from '@/app/actions';
 import type { CVItem } from '@/lib/data';
 import { useEffect } from 'react';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -114,6 +115,7 @@ export function CVForm({ type, isOpen, onClose, item }: CVFormProps) {
             <DialogFooter>
                 <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
                 <Button type="submit" disabled={form.formState.isSubmitting}>
+                    {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {form.formState.isSubmitting ? 'Saving...' : 'Save Item'}
                 </Button>
             </DialogFooter>

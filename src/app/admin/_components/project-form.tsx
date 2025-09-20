@@ -1,7 +1,7 @@
 'use client';
 
 import { z } from 'zod';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import {
@@ -31,9 +31,10 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { createProject, updateProject } from '@/app/actions';
+import { createProject, updateProject, generateProjectDetailsAction } from '@/app/actions';
 import type { Project } from '@/lib/data';
-import { useEffect } from 'react';
+import { useEffect, useTransition } from 'react';
+import { Loader2, Wand2 } from 'lucide-react';
 
 const formSchema = z.object({
   slug: z.string().min(1, 'Slug is required'),
@@ -54,6 +55,15 @@ const formSchema = z.object({
 
 type ProjectFormValues = z.infer<typeof formSchema>;
 
+export const GenerateProjectDetailsInputSchema = z.object({
+  title: z.string().describe('The title of the project.'),
+  description: z.string().describe('A short description of the project.'),
+  section: z.enum(['overview', 'process', 'outcomes']).describe('The specific section to generate content for.'),
+});
+export type GenerateProjectDetailsInput = z.infer<
+  typeof GenerateProjectDetailsInputSchema
+>;
+
 interface ProjectFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -63,6 +73,7 @@ interface ProjectFormProps {
 export function ProjectForm({ isOpen, onClose, project }: ProjectFormProps) {
   const { toast } = useToast();
   const isEditing = !!project;
+  const [isAiPending, startAiTransition] = useTransition();
 
   const form = useForm<ProjectFormValues>({
     resolver: zodResolver(formSchema),
@@ -83,6 +94,8 @@ export function ProjectForm({ isOpen, onClose, project }: ProjectFormProps) {
         featured: false,
     },
   });
+
+  const { title, description } = useWatch({ control: form.control });
 
   useEffect(() => {
     if (isEditing && project) {
@@ -134,6 +147,48 @@ export function ProjectForm({ isOpen, onClose, project }: ProjectFormProps) {
     }
   }
 
+  const handleGenerateContent = (section: 'overview' | 'process' | 'outcomes') => {
+    if (!title || !description) {
+        toast({
+            variant: 'destructive',
+            title: 'Missing Context',
+            description: 'Please provide a title and description before generating content.',
+        });
+        return;
+    }
+
+    startAiTransition(async () => {
+        try {
+            const content = await generateProjectDetailsAction({ title, description, section });
+            form.setValue(section, content, { shouldValidate: true });
+            toast({
+                title: 'Content Generated!',
+                description: `The ${section} has been filled in with AI-generated content.`,
+            });
+        } catch (error) {
+            console.error(error);
+            toast({
+                variant: 'destructive',
+                title: 'AI Generation Failed',
+                description: 'There was an error generating content. Please try again.',
+            });
+        }
+    });
+  };
+
+  const AiButton = ({ section }: { section: 'overview' | 'process' | 'outcomes' }) => (
+    <Button
+      type="button"
+      variant="outline"
+      size="sm"
+      onClick={() => handleGenerateContent(section)}
+      disabled={isAiPending || !title || !description}
+    >
+      {isAiPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Wand2 className="w-4 h-4 mr-2" />}
+      Generate with AI
+    </Button>
+  );
+
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[625px] max-h-[90vh] overflow-y-auto">
@@ -172,13 +227,25 @@ export function ProjectForm({ isOpen, onClose, project }: ProjectFormProps) {
                 <FormItem><FormLabel>Short Description (for cards)</FormLabel><FormControl><Textarea rows={3} {...field} /></FormControl><FormMessage /></FormItem>
             )}/>
             <FormField control={form.control} name="overview" render={({ field }) => (
-                <FormItem><FormLabel>Overview</FormLabel><FormControl><Textarea rows={5} {...field} /></FormControl><FormMessage /></FormItem>
+                <FormItem>
+                    <FormLabel className="flex items-center justify-between w-full">Overview <AiButton section="overview" /></FormLabel>
+                    <FormControl><Textarea rows={5} {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
             )}/>
             <FormField control={form.control} name="process" render={({ field }) => (
-                <FormItem><FormLabel>Process</FormLabel><FormControl><Textarea rows={5} {...field} /></FormControl><FormMessage /></FormItem>
+                <FormItem>
+                    <FormLabel className="flex items-center justify-between w-full">Process <AiButton section="process" /></FormLabel>
+                    <FormControl><Textarea rows={5} {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
             )}/>
             <FormField control={form.control} name="outcomes" render={({ field }) => (
-                <FormItem><FormLabel>Outcomes</FormLabel><FormControl><Textarea rows={5} {...field} /></FormControl><FormMessage /></FormItem>
+                <FormItem>
+                     <FormLabel className="flex items-center justify-between w-full">Outcomes <AiButton section="outcomes" /></FormLabel>
+                    <FormControl><Textarea rows={5} {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
             )}/>
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField control={form.control} name="imageId" render={({ field }) => (
@@ -213,7 +280,8 @@ export function ProjectForm({ isOpen, onClose, project }: ProjectFormProps) {
 
             <DialogFooter>
                 <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
-                <Button type="submit" disabled={form.formState.isSubmitting}>
+                <Button type="submit" disabled={form.formState.isSubmitting || isAiPending}>
+                    {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {form.formState.isSubmitting ? 'Saving...' : 'Save Project'}
                 </Button>
             </DialogFooter>

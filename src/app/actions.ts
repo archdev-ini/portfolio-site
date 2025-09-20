@@ -3,6 +3,12 @@
 import { z } from 'zod';
 import { chat } from '@/ai/flows/chat-flow';
 import type { ChatInput } from '@/ai/flows/chat-flow';
+import { generateProjectDetails } from '@/ai/flows/generate-project-details-flow';
+import type { GenerateProjectDetailsInput } from '@/app/admin/_components/project-form';
+import { generateJournalEntry } from '@/ai/flows/generate-journal-entry-flow';
+import type { GenerateJournalInput } from '@/app/admin/_components/journal-form';
+
+
 import { revalidatePath } from 'next/cache';
 import {
   updateSiteSettings,
@@ -39,6 +45,14 @@ export async function submitContactForm(values: z.infer<typeof contactFormSchema
 export async function submitChatMessage(values: ChatInput) {
     const result = await chat(values);
     return result;
+}
+
+export async function generateProjectDetailsAction(values: GenerateProjectDetailsInput): Promise<string> {
+    return await generateProjectDetails(values);
+}
+
+export async function generateJournalEntryAction(values: GenerateJournalInput): Promise<string> {
+    return await generateJournalEntry(values);
 }
 
 

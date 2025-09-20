@@ -1,7 +1,7 @@
 'use client';
 
 import { z } from 'zod';
-import { useForm } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import {
@@ -30,9 +30,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
-import { createJournalPost, updateJournalPost } from '@/app/actions';
+import { createJournalPost, updateJournalPost, generateJournalEntryAction } from '@/app/actions';
 import type { JournalPost } from '@/lib/data';
-import { useEffect } from 'react';
+import { useEffect, useTransition } from 'react';
+import { Wand2, Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   title: z.string().min(1, 'Title is required'),
@@ -44,6 +45,11 @@ const formSchema = z.object({
 
 type JournalFormValues = z.infer<typeof formSchema>;
 
+export const GenerateJournalInputSchema = z.object({
+  title: z.string().describe('The title of the journal entry.'),
+});
+export type GenerateJournalInput = z.infer<typeof GenerateJournalInputSchema>;
+
 interface JournalFormProps {
   isOpen: boolean;
   onClose: () => void;
@@ -53,6 +59,7 @@ interface JournalFormProps {
 export function JournalForm({ isOpen, onClose, post }: JournalFormProps) {
   const { toast } = useToast();
   const isEditing = !!post;
+  const [isAiPending, startAiTransition] = useTransition();
 
   const form = useForm<JournalFormValues>({
     resolver: zodResolver(formSchema),
@@ -64,6 +71,8 @@ export function JournalForm({ isOpen, onClose, post }: JournalFormProps) {
         link: '',
     },
   });
+
+  const titleValue = useWatch({ control: form.control, name: 'title' });
 
   useEffect(() => {
     if (isEditing && post) {
@@ -94,6 +103,35 @@ export function JournalForm({ isOpen, onClose, post }: JournalFormProps) {
         description: result.message,
       });
     }
+  }
+
+  const handleGenerateContent = () => {
+    if (!titleValue) {
+        toast({
+            variant: 'destructive',
+            title: 'Title is missing',
+            description: 'Please provide a title to generate content.',
+        });
+        return;
+    }
+
+    startAiTransition(async () => {
+        try {
+            const content = await generateJournalEntryAction({ title: titleValue });
+            form.setValue('description', content, { shouldValidate: true });
+            toast({
+                title: 'Content Generated!',
+                description: 'The description has been filled in with AI-generated content.',
+            });
+        } catch (error) {
+            console.error(error);
+            toast({
+                variant: 'destructive',
+                title: 'AI Generation Failed',
+                description: 'There was an error generating content. Please try again.',
+            });
+        }
+    });
   }
 
   return (
@@ -128,7 +166,17 @@ export function JournalForm({ isOpen, onClose, post }: JournalFormProps) {
             )}/>
 
             <FormField control={form.control} name="description" render={({ field }) => (
-                <FormItem><FormLabel>Description</FormLabel><FormControl><Textarea rows={4} {...field} /></FormControl><FormMessage /></FormItem>
+                <FormItem>
+                    <FormLabel className="flex items-center justify-between w-full">
+                        Description
+                        <Button type="button" variant="outline" size="sm" onClick={handleGenerateContent} disabled={isAiPending || !titleValue}>
+                            {isAiPending ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Wand2 className="w-4 h-4 mr-2" />}
+                            Generate with AI
+                        </Button>
+                    </FormLabel>
+                    <FormControl><Textarea rows={4} {...field} /></FormControl>
+                    <FormMessage />
+                </FormItem>
             )}/>
             
             <FormField control={form.control} name="imageId" render={({ field }) => (
@@ -141,7 +189,8 @@ export function JournalForm({ isOpen, onClose, post }: JournalFormProps) {
 
             <DialogFooter>
                 <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
-                <Button type="submit" disabled={form.formState.isSubmitting}>
+                <Button type="submit" disabled={form.formState.isSubmitting || isAiPending}>
+                    {(form.formState.isSubmitting) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {form.formState.isSubmitting ? 'Saving...' : 'Save Post'}
                 </Button>
             </DialogFooter>

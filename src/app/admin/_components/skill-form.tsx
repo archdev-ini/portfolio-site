@@ -32,6 +32,7 @@ import { useToast } from '@/hooks/use-toast';
 import { createSkill, updateSkill } from '@/app/actions';
 import type { Skill } from '@/lib/data';
 import { useEffect } from 'react';
+import { Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -120,6 +121,7 @@ export function SkillForm({ isOpen, onClose, skill }: SkillFormProps) {
             <DialogFooter>
                 <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
                 <Button type="submit" disabled={form.formState.isSubmitting}>
+                    {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
                     {form.formState.isSubmitting ? 'Saving...' : 'Save Skill'}
                 </Button>
             </DialogFooter>
