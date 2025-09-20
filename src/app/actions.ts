@@ -10,8 +10,9 @@ import {
   updateRecord,
   deleteRecord,
   updateAboutContent,
+  updateContactContent,
 } from '@/lib/airtable';
-import type { SiteSettings, Project, JournalPost, AboutContent } from '@/lib/data';
+import type { SiteSettings, Project, JournalPost, AboutContent, Skill, CVItem, ContactContent } from '@/lib/data';
 
 const contactFormSchema = z.object({
   name: z.string(),
@@ -74,6 +75,24 @@ export async function updateAboutContentAction(id: string, values: AboutContent)
       return {
         success: false,
         message: 'Failed to update about page content.',
+      };
+    }
+  }
+
+  export async function updateContactContentAction(id: string, values: ContactContent) {
+    try {
+      await updateContactContent(id, values);
+      revalidatePath('/#contact');
+      revalidatePath('/admin');
+      return {
+        success: true,
+        message: 'Contact section updated successfully!',
+      };
+    } catch (error) {
+      console.error(error);
+      return {
+        success: false,
+        message: 'Failed to update contact section.',
       };
     }
   }
@@ -150,5 +169,81 @@ export async function createJournalPost(data: Omit<JournalPost, 'id'>) {
     } catch (error) {
       console.error(error);
       return { success: false, message: 'Failed to delete journal post.' };
+    }
+  }
+
+  // Skill Actions
+export async function createSkill(data: Omit<Skill, 'id'>) {
+    try {
+      await createRecord('Skills', { name: data.name, category: data.category });
+      revalidatePath('/');
+      revalidatePath('/admin');
+      return { success: true, message: 'Skill created successfully.' };
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: 'Failed to create skill.' };
+    }
+  }
+  
+  export async function updateSkill(id: string, data: Partial<Omit<Skill, 'id'>>) {
+    try {
+      await updateRecord('Skills', id, { name: data.name, category: data.category });
+      revalidatePath('/');
+      revalidatePath('/admin');
+      return { success: true, message: 'Skill updated successfully.' };
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: 'Failed to update skill.' };
+    }
+  }
+  
+  export async function deleteSkill(id: string) {
+    try {
+      await deleteRecord('Skills', id);
+      revalidatePath('/');
+      revalidatePath('/admin');
+      return { success: true, message: 'Skill deleted successfully.' };
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: 'Failed to delete skill.' };
+    }
+  }
+
+  // CV Actions
+  const revalidateCVPaths = () => {
+    revalidatePath('/cv');
+    revalidatePath('/admin');
+  }
+
+  export async function createCVItem(table: 'CV_Experience' | 'CV_Education', data: Omit<CVItem, 'id'>) {
+    try {
+      await createRecord(table, data);
+      revalidateCVPaths();
+      return { success: true, message: 'CV item created successfully.' };
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: 'Failed to create CV item.' };
+    }
+  }
+
+  export async function updateCVItem(table: 'CV_Experience' | 'CV_Education', id: string, data: Partial<Omit<CVItem, 'id'>>) {
+    try {
+      await updateRecord(table, id, data);
+      revalidateCVPaths();
+      return { success: true, message: 'CV item updated successfully.' };
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: 'Failed to update CV item.' };
+    }
+  }
+
+  export async function deleteCVItem(table: 'CV_Experience' | 'CV_Education', id: string) {
+    try {
+      await deleteRecord(table, id);
+      revalidateCVPaths();
+      return { success: true, message: 'CV item deleted successfully.' };
+    } catch (error) {
+      console.error(error);
+      return { success: false, message: 'Failed to delete CV item.' };
     }
   }

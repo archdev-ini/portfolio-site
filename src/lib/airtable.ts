@@ -1,5 +1,5 @@
 import Airtable, { type FieldSet, type Records } from 'airtable';
-import type { Project, JournalPost, SkillCategory, CVItem, SiteSettings, AboutContent, ContactContent } from './data';
+import type { Project, JournalPost, SkillCategory, CVItem, SiteSettings, AboutContent, ContactContent, Skill } from './data';
 
 if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
   throw new Error('Airtable API Key or Base ID is not defined in environment variables');
@@ -82,7 +82,7 @@ const mapToJournalPost = (record: any): JournalPost => ({
   link: record.fields.link || '#',
 });
 
-const mapToSkillCategory = (records: any[]): SkillCategory[] => {
+const mapToGroupedSkills = (records: any[]): SkillCategory[] => {
     const skillMap: { [key: string]: any } = {};
 
     records.forEach(record => {
@@ -103,6 +103,12 @@ const mapToSkillCategory = (records: any[]): SkillCategory[] => {
     });
 }
 
+const mapToSkill = (record: any): Skill => ({
+    id: record.id,
+    name: record.fields['name'],
+    category: record.fields.category,
+});
+
 
 const mapToCVItem = (record: any): CVItem => ({
   id: record.id,
@@ -110,14 +116,6 @@ const mapToCVItem = (record: any): CVItem => ({
   title: record.fields.title,
   subtitle: record.fields.subtitle,
   description: record.fields.description,
-});
-
-const mapToEducationItem = (record: any): CVItem => ({
-    id: record.id,
-    date: record.fields.date,
-    title: record.fields.title,
-    subtitle: record.fields.subtitle,
-    description: record.fields.description,
 });
 
 
@@ -132,9 +130,14 @@ export const fetchJournalPosts = async (): Promise<JournalPost[]> => {
   return records.map(mapToJournalPost).sort((a,b) => b.id.localeCompare(a.id));
 };
 
-export const fetchSkills = async (): Promise<any[]> => {
+export const fetchGroupedSkills = async (): Promise<any[]> => {
     const records = await getRecords('Skills');
-    return mapToSkillCategory(records);
+    return mapToGroupedSkills(records);
+};
+
+export const fetchAllSkills = async (): Promise<Skill[]> => {
+    const records = await getRecords('Skills');
+    return records.map(mapToSkill);
 };
 
 export const fetchExperience = async (): Promise<CVItem[]> => {
@@ -144,7 +147,7 @@ export const fetchExperience = async (): Promise<CVItem[]> => {
 
 export const fetchEducation = async (): Promise<CVItem[]> => {
     const records = await getRecords('CV_Education');
-    return records.map(mapToEducationItem);
+    return records.map(mapToCVItem);
 }
 
 export const fetchSiteSettings = async (): Promise<any> => {
@@ -254,3 +257,10 @@ export const fetchContactContent = async (): Promise<any> => {
         ctaLine: record.fields.ctaLine,
     };
 }
+
+export const updateContactContent = async (id: string, data: Partial<ContactContent>) => {
+    const fieldsToUpdate: { [key: string]: any } = {};
+    if (data.introText) fieldsToUpdate.introText = data.introText;
+    if (data.ctaLine) fieldsToUpdate.ctaLine = data.ctaLine;
+    return await updateRecord('Contact', id, fieldsToUpdate);
+};

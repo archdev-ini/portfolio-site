@@ -14,7 +14,7 @@ export default async function Home() {
   const aboutContent = await db.getAboutContent();
   const projects = await db.getProjects();
   const journalPosts = await db.getJournalPosts();
-  const skills = await db.getSkills();
+  const skills = await db.getGroupedSkills();
   const contactContent = await db.getContactContent();
 
   return (

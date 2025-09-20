@@ -6,6 +6,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ProjectsList } from './_components/projects-list';
 import { JournalList } from './_components/journal-list';
+import { SkillsList } from './_components/skills-list';
+import { ContactForm as ContactContentForm } from './_components/contact-form';
+import { EducationList } from './_components/education-list';
+import { ExperienceList } from './_components/experience-list';
+
 
 export default async function AdminPage({
   searchParams,
@@ -22,7 +27,11 @@ export default async function AdminPage({
   const aboutContent = await db.getAboutContent();
   const projects = await db.getProjects();
   const journalPosts = await db.getJournalPosts();
-  // We can add fetching for other data here as we build more forms
+  const allSkills = await db.getAllSkills();
+  const experience = await db.getCVExperience();
+  const education = await db.getCVEducation();
+  const contactContent = await db.getContactContent();
+
 
   return (
     <main className="py-24 md:py-32">
@@ -106,7 +115,7 @@ export default async function AdminPage({
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                           <p>Skills management UI will go here.</p>
+                           <SkillsList skills={allSkills} />
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -119,8 +128,15 @@ export default async function AdminPage({
                                 Add, edit, or delete experience and education entries.
                             </CardDescription>
                         </CardHeader>
-                        <CardContent>
-                           <p>CV management UI will go here.</p>
+                        <CardContent className="space-y-8">
+                           <div>
+                                <h3 className="text-2xl font-bold font-headline mb-4">Experience</h3>
+                                <ExperienceList items={experience} />
+                           </div>
+                           <div>
+                                <h3 className="text-2xl font-bold font-headline mb-4">Education</h3>
+                                <EducationList items={education} />
+                           </div>
                         </CardContent>
                     </Card>
                 </TabsContent>
@@ -134,7 +150,7 @@ export default async function AdminPage({
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                           <p>Contact form will go here.</p>
+                           <ContactForm content={contactContent} />
                         </CardContent>
                     </Card>
                 </TabsContent>

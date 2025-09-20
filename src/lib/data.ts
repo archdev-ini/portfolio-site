@@ -1,5 +1,5 @@
 import { DraftingCompass, CodeXml, Users, type LucideIcon } from 'lucide-react';
-import { fetchProjects, fetchJournalPosts, fetchSkills, fetchExperience, fetchEducation, fetchSiteSettings, fetchAboutContent, fetchContactContent } from './airtable';
+import { fetchProjects, fetchJournalPosts, fetchAllSkills, fetchExperience, fetchEducation, fetchSiteSettings, fetchAboutContent, fetchContactContent, fetchGroupedSkills } from './airtable';
 
 
 export type Project = {
@@ -30,8 +30,9 @@ export type JournalPost = {
 };
 
 export type Skill = {
+    id: string;
     name: string;
-    category: string;
+    category: 'Architecture & Design' | 'Web3 & Development' | 'Writing & Community';
 }
 
 export type SkillCategory = {
@@ -77,6 +78,7 @@ export type AboutContent = {
 }
 
 export type ContactContent = {
+    id: string;
     introText: string;
     ctaLine: string;
 }
@@ -88,9 +90,9 @@ export const db = {
     getContactContent: fetchContactContent,
     getProjects: fetchProjects,
     getJournalPosts: fetchJournalPosts,
-    getSkills: async (): Promise<SkillCategory[]> => {
+    getGroupedSkills: async (): Promise<SkillCategory[]> => {
         try {
-            const skills = await fetchSkills();
+            const skills = await fetchGroupedSkills();
             const iconMap = {
                 'Architecture & Design': DraftingCompass,
                 'Web3 & Development': CodeXml,
@@ -105,6 +107,7 @@ export const db = {
             return [];
         }
     },
+    getAllSkills: fetchAllSkills,
     getCVExperience: fetchExperience,
     getCVEducation: fetchEducation,
 };
