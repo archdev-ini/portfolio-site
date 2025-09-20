@@ -25,8 +25,8 @@ export const Skills = ({ skills }: { skills: SkillCategory[] }) => {
                 </CardHeader>
                 <CardContent>
                   <ul className="grid grid-cols-2 gap-x-6 gap-y-3 text-foreground/80">
-                    {skillCategory.items.map((item) => (
-                      <li key={item} className="flex items-center gap-3">
+                    {skillCategory.items.map((item, index) => (
+                      <li key={`${skillCategory.category}-${item}-${index}`} className="flex items-center gap-3">
                          <div className="w-1.5 h-1.5 rounded-full bg-primary/70" />
                         <span>{item}</span>
                       </li>
