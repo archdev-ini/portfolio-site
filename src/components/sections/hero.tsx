@@ -12,7 +12,7 @@ export const Hero = ({ hero }: { hero: SiteSettings['hero'] }) => {
             Designing Futures. Building Communities.
            </div>
           <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6 font-headline">
-            Architecture . Web3 . Creative Innovation
+            Architecture · Web3 · Creative Innovation
           </h1>
           <p className="text-lg md:text-xl text-foreground/70 mb-6">
             I’m Inioluwa Oladipupo—an architect in training and a community builder in Web3, exploring how spaces, systems, and stories can reimagine the way we live, learn, and connect.
