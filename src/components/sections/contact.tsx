@@ -44,7 +44,6 @@ const socialIconMap = {
 
 export const Contact = ({ contact, site }: { contact: ContactContent, site: SiteSettings }) => {
   const { toast } = useToast();
-  const { introText, ctaLine } = contact;
   const socialLinks = site.footer.socialLinks;
   
   const form = useForm<z.infer<typeof formSchema>>({
@@ -79,19 +78,27 @@ export const Contact = ({ contact, site }: { contact: ContactContent, site: Site
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           <div className="flex flex-col justify-center">
             <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-4">
-              {introText}
+              Get in Touch
             </h2>
             <p className="text-lg text-foreground/70 mb-8 max-w-lg">
-              {ctaLine}
+                I’m building toward futures where design, technology, and community align. If you’re working on something visionary—or want to co-create the systems of tomorrow—let’s connect.
             </p>
-            <div className="flex space-x-4">
-              {socialLinks.map((social) => (
-                <Button key={social.name} variant="outline" size="icon" asChild>
-                  <Link href={social.href} target="_blank" aria-label={social.name}>
-                    {socialIconMap[social.name as keyof typeof socialIconMap]}
-                  </Link>
+            <div className="flex items-center gap-4">
+                <Button asChild size="lg">
+                    <Link href="mailto:hello@inioluwa.xyz">
+                        hello@inioluwa.xyz
+                    </Link>
                 </Button>
-              ))}
+                <div className="flex space-x-1">
+                {socialLinks.map((social) => (
+                    social.name !== 'Email' &&
+                    <Button key={social.name} variant="outline" size="icon" asChild>
+                    <Link href={social.href} target="_blank" aria-label={social.name}>
+                        {socialIconMap[social.name as keyof typeof socialIconMap]}
+                    </Link>
+                    </Button>
+                ))}
+                </div>
             </div>
           </div>
           <div className="bg-secondary/30 p-8 rounded-lg">

@@ -7,7 +7,7 @@ import { ArrowRight, MoveRight } from 'lucide-react';
 import type { Project } from '@/lib/data';
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-    <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-12 text-center">{children}</h2>
+    <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-4 text-center">{children}</h2>
 );
 
 export const WorkPreview = ({ projects }: { projects: Project[] }) => {
@@ -17,6 +17,9 @@ export const WorkPreview = ({ projects }: { projects: Project[] }) => {
     <section id="work" className="py-24 md:py-32 bg-secondary/30">
       <div className="container">
         <SectionTitle>Selected Work</SectionTitle>
+        <p className="max-w-2xl mx-auto text-center text-lg text-foreground/70 mb-12">
+            Each project I take on is a prototype of the future—an experiment in design, technology, or community. The goal isn’t just to create but to shift what’s possible.
+        </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {featuredProjects.map((project) => {
             const projectImage = PlaceHolderImages.find(img => img.id === project.imageId);

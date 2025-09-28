@@ -28,10 +28,7 @@ export const Journal = ({ posts, isPage = false }: { posts: JournalPost[], isPag
       <div className="container">
         <SectionTitle>Notes &amp; Sketches</SectionTitle>
         <p className="max-w-2xl mx-auto text-center text-lg text-foreground/70 mb-12">
-          Thoughts, experiments, and reflections on architecture, code, and community from my Substack,{' '}
-          <Link href="https://substack.com" target="_blank" className="text-primary underline-offset-4 hover:underline">
-            0xSketches
-          </Link>.
+          0xSketches is my living journal—where I share thoughts on architecture, code, and community as they evolve. It’s not about finished products but about ideas in motion—a glimpse into how the future is being written.
         </p>
 
         {isPage ? (
@@ -111,7 +108,7 @@ export const Journal = ({ posts, isPage = false }: { posts: JournalPost[], isPag
             </div>
             <div className="mt-16 text-center">
               <Button size="lg" asChild>
-                <Link href="/journal">Read More <MoveRight className="ml-2" /></Link>
+                <Link href="/journal">Read the Journal <MoveRight className="ml-2" /></Link>
               </Button>
             </div>
           </>
