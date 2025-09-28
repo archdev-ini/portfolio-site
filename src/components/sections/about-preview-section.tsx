@@ -6,7 +6,7 @@ import { PlaceHolderImages } from '@/lib/placeholder-images';
 import type { AboutContent } from '@/lib/data';
 
 export const AboutPreview = ({ about }: { about: AboutContent }) => {
-    const aboutImage = PlaceHolderImages.find(img => img.id === 'about-portrait');
+    const aboutImage = PlaceHolderImages.find(img => img.id === about.profileImageId) || PlaceHolderImages.find(img => img.id === 'about-portrait');
 
   return (
     <section id="about" className="py-24 md:py-32">
@@ -17,7 +17,7 @@ export const AboutPreview = ({ about }: { about: AboutContent }) => {
                         About Me
                     </h2>
                     <p className="text-lg text-foreground/70">
-                       I believe architecture isn’t only about structures—it’s about the systems and communities that make them come alive.
+                       {about.shortText}
                     </p>
                     <p className="text-lg text-foreground/70">
                         I’m shaping a practice where physical spaces, digital networks, and human creativity merge into futures that empower people. From open learning ecosystems to community-driven platforms, my mission is to design scalable systems for collective growth.

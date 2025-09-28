@@ -9,8 +9,7 @@ const socialIconMap: { [key: string]: React.ReactNode } = {
 };
 
 export const Footer = async () => {
-  const { siteTitle, footer } = await db.getSiteSettings();
-  const { shortText: aboutShortText } = await db.getAboutContent();
+  const { siteTitle, footer, hero } = await db.getSiteSettings();
 
   const navLinks = [
     { href: '/', label: 'Home' },
@@ -30,7 +29,7 @@ export const Footer = async () => {
                 <span className="font-bold text-lg">{siteTitle}</span>
               </Link>
               <p className="text-base text-foreground/70">
-                {aboutShortText ? `${aboutShortText.substring(0, 100)}...` : ''}
+                {hero.intro ? `${hero.intro.substring(0, 150)}...` : ''}
               </p>
             </div>
           </div>
