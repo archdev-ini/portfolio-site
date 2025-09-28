@@ -156,7 +156,8 @@ export async function createJournalPost(data: Omit<JournalPost, 'id'>) {
       revalidatePath('/journal');
       revalidatePath('/admin');
       return { success: true, message: 'Journal post created successfully.' };
-    } catch (error) {
+    } catch (error)
+{
       console.error(error);
       return { success: false, message: 'Failed to create journal post.' };
     }
