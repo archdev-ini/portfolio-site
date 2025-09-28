@@ -37,19 +37,19 @@ import { useEffect, useTransition } from 'react';
 import { Loader2, Wand2 } from 'lucide-react';
 
 const formSchema = z.object({
-  slug: z.string().min(1, 'Slug is required'),
-  title: z.string().min(1, 'Title is required'),
+  slug: z.string(),
+  title: z.string(),
   category: z.enum(['Architecture', 'Web3', 'Writing', 'Community']),
-  description: z.string().min(1, 'Description is required'),
-  imageId: z.string().min(1, 'Image ID is required'),
+  description: z.string(),
+  imageId: z.string().optional(),
   galleryImageIds: z.string().optional(),
   link: z.string().url().optional().or(z.literal('')),
-  role: z.string().min(1, 'Role is required'),
-  duration: z.string().min(1, 'Duration is required'),
-  technologies: z.string().min(1, 'Technologies are required'),
-  overview: z.string().min(1, 'Overview is required'),
-  process: z.string().min(1, 'Process is required'),
-  outcomes: z.string().min(1, 'Outcomes are required'),
+  role: z.string(),
+  duration: z.string(),
+  technologies: z.string(),
+  overview: z.string(),
+  process: z.string(),
+  outcomes: z.string(),
   featured: z.boolean().default(false),
 });
 
@@ -76,7 +76,6 @@ export function ProjectForm({ isOpen, onClose, project }: ProjectFormProps) {
   const [isAiPending, startAiTransition] = useTransition();
 
   const form = useForm<ProjectFormValues>({
-    resolver: zodResolver(formSchema),
     defaultValues: {
         slug: '',
         title: '',
@@ -248,12 +247,20 @@ export function ProjectForm({ isOpen, onClose, project }: ProjectFormProps) {
                 </FormItem>
             )}/>
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormField control={form.control} name="imageId" render={({ field }) => (
-                    <FormItem><FormLabel>Main Image ID</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                )}/>
-                <FormField control={form.control} name="galleryImageIds" render={({ field }) => (
-                    <FormItem><FormLabel>Gallery Image IDs (comma-separated)</FormLabel><FormControl><Input {...field} /></FormControl><FormMessage /></FormItem>
-                )}/>
+                <FormItem>
+                  <FormLabel>Main Image</FormLabel>
+                  <FormControl>
+                    <Input type="file" />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+                <FormItem>
+                  <FormLabel>Gallery Images</FormLabel>
+                  <FormControl>
+                    <Input type="file" multiple />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
             </div>
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField control={form.control} name="role" render={({ field }) => (
