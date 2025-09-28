@@ -8,8 +8,8 @@ export type Project = {
   title: string;
   category: 'Architecture' | 'Web3' | 'Writing' | 'Community';
   description: string;
-  imageId: string;
-  galleryImageIds?: string[];
+  imageId: string | null;
+  galleryImageIds: string[];
   link: string;
   role: string;
   duration: string;

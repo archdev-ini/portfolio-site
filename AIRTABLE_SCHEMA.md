@@ -41,8 +41,8 @@ Each record in this table represents a project in your portfolio.
 - `title` (Single line text)
 - `category` (Single select) - *Options: `Architecture`, `Web3`, `Writing`, `Community`.*
 - `description` (Long text) - *A short summary for the project card.*
-- `imageId` (Single line text) - *An ID from `placeholder-images.json`.*
-- `galleryImageIds` (Single line text) - *Comma-separated IDs (e.g., `img1,img2,img3`).*
+- `imageId` (Attachment) - *An Attachment field for the main project image. Should only contain one image.*
+- `galleryImageIds` (Attachment) - *An Attachment field for the project gallery. Can contain multiple images.*
 - `link` (URL) - *Link to the live project, if available.*
 - `role` (Single line text)
 - `duration` (Single line text)
@@ -98,3 +98,4 @@ This table should have only **one record** for the contact section content.
 
 - `introText` (Single line text)
 - `ctaLine` (Long text)
+

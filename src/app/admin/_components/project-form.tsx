@@ -31,23 +31,24 @@ import {
 } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useToast } from '@/hooks/use-toast';
-import { createProject, updateProject, generateProjectDetailsAction } from '@/app/actions';
+import { createProject, updateProject, generateProjectDetailsAction, uploadFileAction } from '@/app/actions';
 import type { Project } from '@/lib/data';
-import { useEffect, useTransition } from 'react';
+import { useEffect, useTransition, useState } from 'react';
 import { Loader2, Wand2 } from 'lucide-react';
+import Image from 'next/image';
 
 const formSchema = z.object({
   slug: z.string(),
   title: z.string(),
   category: z.enum(['Architecture', 'Web3', 'Writing', 'Community']),
   description: z.string(),
-  imageId: z.string().optional(),
-  galleryImageIds: z.string().optional(),
+  imageId: z.any(),
+  galleryImageIds: z.any(),
   link: z.string().url().optional().or(z.literal('')),
   role: z.string(),
   duration: z.string(),
   technologies: z.string(),
-  overview: z.string(),
+overview: z.string(),
   process: z.string(),
   outcomes: z.string(),
   featured: z.boolean().default(false),
@@ -74,6 +75,9 @@ export function ProjectForm({ isOpen, onClose, project }: ProjectFormProps) {
   const { toast } = useToast();
   const isEditing = !!project;
   const [isAiPending, startAiTransition] = useTransition();
+  const [isUploading, setIsUploading] = useState(false);
+  const [mainImagePreview, setMainImagePreview] = useState<string | null>(null);
+  const [galleryPreviews, setGalleryPreviews] = useState<string[]>([]);
 
   const form = useForm<ProjectFormValues>({
     defaultValues: {
@@ -81,8 +85,8 @@ export function ProjectForm({ isOpen, onClose, project }: ProjectFormProps) {
         title: '',
         category: 'Architecture',
         description: '',
-        imageId: '',
-        galleryImageIds: '',
+        imageId: null,
+        galleryImageIds: [],
         link: '',
         role: '',
         duration: '',
@@ -101,16 +105,19 @@ export function ProjectForm({ isOpen, onClose, project }: ProjectFormProps) {
       form.reset({
         ...project,
         technologies: project.technologies.join(','),
-        galleryImageIds: project.galleryImageIds?.join(','),
+        imageId: null, // Don't prepopulate file inputs
+        galleryImageIds: [], // Don't prepopulate file inputs
       });
+      setMainImagePreview(project.imageId);
+      setGalleryPreviews(project.galleryImageIds || []);
     } else {
       form.reset({
         slug: '',
         title: '',
         category: 'Architecture',
         description: '',
-        imageId: '',
-        galleryImageIds: '',
+        imageId: null,
+        galleryImageIds: [],
         link: '',
         role: '',
         duration: '',
@@ -120,29 +127,78 @@ export function ProjectForm({ isOpen, onClose, project }: ProjectFormProps) {
         outcomes: '',
         featured: false,
       });
+      setMainImagePreview(null);
+      setGalleryPreviews([]);
     }
   }, [project, isEditing, form]);
 
-  async function onSubmit(values: ProjectFormValues) {
-    const dataToSubmit = {
-      ...values,
-      technologies: values.technologies.split(',').map(s => s.trim()),
-      galleryImageIds: values.galleryImageIds?.split(',').map(s => s.trim()) || [],
-    };
-    
-    const result = isEditing
-      ? await updateProject(project.id, dataToSubmit)
-      : await createProject(dataToSubmit);
+  const fileToDataUri = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
 
-    if (result.success) {
-      toast({ title: 'Success!', description: result.message });
-      onClose();
-    } else {
-      toast({
+  async function onSubmit(values: ProjectFormValues) {
+    setIsUploading(true);
+    let mainImageUrl = project?.imageId; // Keep existing image if not changed
+    let galleryImageUrls = project?.galleryImageIds || [];
+
+    try {
+      // Upload Main Image
+      if (values.imageId && values.imageId[0]) {
+        const dataUri = await fileToDataUri(values.imageId[0]);
+        const result = await uploadFileAction(dataUri);
+        if ('url' in result) {
+          mainImageUrl = result.url;
+        } else {
+          throw new Error(result.error);
+        }
+      }
+
+      // Upload Gallery Images
+      if (values.galleryImageIds && values.galleryImageIds.length > 0) {
+        const uploadedUrls = await Promise.all(
+          Array.from(values.galleryImageIds as FileList).map(async (file) => {
+            const dataUri = await fileToDataUri(file);
+            const result = await uploadFileAction(dataUri);
+            if ('url' in result) {
+              return result.url;
+            } else {
+              throw new Error(result.error);
+            }
+          })
+        );
+        galleryImageUrls = [...galleryImageUrls, ...uploadedUrls];
+      }
+
+      const dataToSubmit = {
+        ...values,
+        technologies: values.technologies.split(',').map(s => s.trim()),
+        imageId: mainImageUrl ? [{ url: mainImageUrl }] : undefined,
+        galleryImageIds: galleryImageUrls.length > 0 ? galleryImageUrls.map(url => ({ url })) : undefined,
+      };
+    
+      const result = isEditing
+        ? await updateProject(project.id, dataToSubmit)
+        : await createProject(dataToSubmit);
+
+      if (result.success) {
+        toast({ title: 'Success!', description: result.message });
+        onClose();
+      } else {
+        throw new Error(result.message);
+      }
+    } catch (error: any) {
+       toast({
         variant: 'destructive',
-        title: 'Uh oh!',
-        description: result.message,
+        title: 'Uh oh! Something went wrong.',
+        description: error.message || 'Failed to save project.',
       });
+    } finally {
+        setIsUploading(false);
     }
   }
 
@@ -247,20 +303,28 @@ export function ProjectForm({ isOpen, onClose, project }: ProjectFormProps) {
                 </FormItem>
             )}/>
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <FormItem>
-                  <FormLabel>Main Image</FormLabel>
-                  <FormControl>
-                    <Input type="file" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-                <FormItem>
-                  <FormLabel>Gallery Images</FormLabel>
-                  <FormControl>
-                    <Input type="file" multiple />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+                <FormField control={form.control} name="imageId" render={({ field: { onChange, value, ...rest } }) => (
+                  <FormItem>
+                    <FormLabel>Main Image</FormLabel>
+                    {mainImagePreview && <div className="relative w-full h-32"><Image src={mainImagePreview} alt="Main image preview" fill className="object-contain rounded-md border" /></div>}
+                    <FormControl>
+                      <Input type="file" accept="image/*" onChange={e => onChange(e.target.files)} {...rest} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}/>
+                <FormField control={form.control} name="galleryImageIds" render={({ field: { onChange, value, ...rest } }) => (
+                  <FormItem>
+                    <FormLabel>Gallery Images</FormLabel>
+                     <div className="flex flex-wrap gap-2">
+                        {galleryPreviews.map((url) => <div key={url} className="relative w-20 h-20"><Image src={url} alt="Gallery image preview" fill className="object-cover rounded-md border" /></div>)}
+                    </div>
+                    <FormControl>
+                      <Input type="file" accept="image/*" multiple onChange={e => onChange(e.target.files)} {...rest} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}/>
             </div>
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField control={form.control} name="role" render={({ field }) => (
@@ -287,9 +351,9 @@ export function ProjectForm({ isOpen, onClose, project }: ProjectFormProps) {
 
             <DialogFooter>
                 <Button type="button" variant="outline" onClick={onClose}>Cancel</Button>
-                <Button type="submit" disabled={form.formState.isSubmitting || isAiPending}>
-                    {form.formState.isSubmitting && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {form.formState.isSubmitting ? 'Saving...' : 'Save Project'}
+                <Button type="submit" disabled={form.formState.isSubmitting || isAiPending || isUploading}>
+                    {(form.formState.isSubmitting || isUploading) && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {isUploading ? 'Uploading...' : form.formState.isSubmitting ? 'Saving...' : 'Save Project'}
                 </Button>
             </DialogFooter>
           </form>

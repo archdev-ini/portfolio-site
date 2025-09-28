@@ -1,3 +1,4 @@
+
 import Airtable, { type FieldSet, type Records } from 'airtable';
 import type { Project, JournalPost, SkillCategory, CVItem, SiteSettings, AboutContent, ContactContent, Skill } from './data';
 
@@ -33,9 +34,7 @@ export const updateRecord = async (tableName: string, recordId: string, fields: 
         if (fields.technologies && Array.isArray(fields.technologies)) {
             fields.technologies = fields.technologies.join(',');
         }
-        if (fields.galleryImageIds && Array.isArray(fields.galleryImageIds)) {
-            fields.galleryImageIds = fields.galleryImageIds.join(',');
-        }
+       
         const updatedRecords = await base(tableName).update([{ id: recordId, fields }]);
         return updatedRecords[0];
     } catch (err: any) {
@@ -61,8 +60,8 @@ const mapToProject = (record: any): Project => ({
   title: record.fields['title'],
   category: record.fields.category || 'Community',
   description: record.fields.description,
-  imageId: record.fields.imageId || 'project-arch-1',
-  galleryImageIds: record.fields.galleryImageIds ? record.fields.galleryImageIds.split(',') : [],
+  imageId: record.fields.imageId?.[0]?.url || null,
+  galleryImageIds: record.fields.galleryImageIds?.map((att: any) => att.url) || [],
   link: record.fields.link || '#',
   role: record.fields.role || 'N/A',
   duration: record.fields.duration || 'N/A',

@@ -35,8 +35,9 @@ export default async function ProjectPage({ params }: { params: { slug: string }
     notFound();
   }
 
-  const projectImage = PlaceHolderImages.find(img => img.id === project.imageId);
-  const galleryImages = project.galleryImageIds?.map(id => PlaceHolderImages.find(img => img.id === id)).filter(Boolean);
+  const projectImage = project.imageId ? { imageUrl: project.imageId, description: project.title, imageHint: '' } : PlaceHolderImages.find(img => img.id === 'project-arch-1');
+  const galleryImages = project.galleryImageIds?.map(url => ({ id: url, imageUrl: url, description: 'Gallery image', imageHint: '' })) || [];
+
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -100,7 +101,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
                       </div>
                     </div>
                   </div>
-                  {project.link !== '#' && (
+                  {project.link && project.link !== '#' && (
                     <Button asChild className="w-full mt-8">
                       <Link href={project.link} target="_blank">
                         Live Project <ExternalLink className="ml-2" />

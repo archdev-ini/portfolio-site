@@ -22,7 +22,7 @@ export const WorkPreview = ({ projects }: { projects: Project[] }) => {
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {featuredProjects.map((project) => {
-            const projectImage = PlaceHolderImages.find(img => img.id === project.imageId);
+            const projectImage = project.imageId ? { imageUrl: project.imageId, description: project.title, imageHint: '' } : PlaceHolderImages.find(img => img.id === 'project-arch-1');
             if (!projectImage) return null;
 
             return (

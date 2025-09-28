@@ -112,7 +112,7 @@ export async function updateAboutContentAction(id: string, values: AboutContent)
   }
 
 // Project Actions
-export async function createProject(data: Omit<Project, 'id'>) {
+export async function createProject(data: Partial<Project>) {
   try {
     await createRecord('Projects', data);
     revalidatePath('/work');
@@ -124,7 +124,7 @@ export async function createProject(data: Omit<Project, 'id'>) {
   }
 }
 
-export async function updateProject(id: string, data: Partial<Omit<Project, 'id'>>) {
+export async function updateProject(id: string, data: Partial<Project>) {
   try {
     await updateRecord('Projects', id, data);
     revalidatePath(`/work/${data.slug}`);
@@ -260,5 +260,34 @@ export async function createSkill(data: Omit<Skill, 'id'>) {
     } catch (error) {
       console.error(error);
       return { success: false, message: 'Failed to delete CV item.' };
+    }
+  }
+
+  export async function uploadFileAction(fileDataUri: string): Promise<{url: string} | {error: string}> {
+    try {
+      const imgbbApiKey = process.env.IMGBB_API_KEY;
+      if (!imgbbApiKey) {
+        throw new Error('IMGBB_API_KEY is not set in environment variables.');
+      }
+      
+      const formData = new FormData();
+      // The Data URI needs to be stripped of the prefix
+      formData.append('image', fileDataUri.substring(fileDataUri.indexOf(',') + 1));
+  
+      const response = await fetch(`https://api.imgbb.com/1/upload?key=${imgbbApiKey}`, {
+        method: 'POST',
+        body: formData,
+      });
+  
+      const result = await response.json();
+  
+      if (result.success) {
+        return { url: result.data.url };
+      } else {
+        throw new Error(result.error.message || 'Image upload failed');
+      }
+    } catch (error: any) {
+      console.error('File upload failed:', error);
+      return { error: error.message };
     }
   }
