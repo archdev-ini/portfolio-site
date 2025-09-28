@@ -81,12 +81,13 @@ export const Contact = ({ contact, site }: { contact: ContactContent, site: Site
               Get in Touch
             </h2>
             <p className="text-lg text-foreground/70 mb-8 max-w-lg">
-                I’m building toward futures where design, technology, and community align. If you’re working on something visionary—or want to co-create the systems of tomorrow—let’s connect.
+                I’m building toward futures where design, technology, and community align.
+If you’re working on something visionary—or want to co-create the systems of tomorrow—let’s connect.
             </p>
             <div className="flex items-center gap-4">
                 <Button asChild size="lg">
-                    <Link href="mailto:hello@inioluwa.xyz">
-                        hello@inioluwa.xyz
+                    <Link href="mailto:inioluwaoladipupostudio@gmail.com">
+                        inioluwaoladipupostudio@gmail.com
                     </Link>
                 </Button>
                 <div className="flex space-x-1">

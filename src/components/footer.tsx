@@ -56,8 +56,8 @@ export const Footer = async () => {
                    </Link>
                  </li>
                   <li>
-                   <Link href="mailto:hello@inioluwa.xyz" className="text-foreground/70 transition-colors hover:text-primary">
-                     hello@inioluwa.xyz
+                   <Link href="mailto:inioluwaoladipupostudio@gmail.com" className="text-foreground/70 transition-colors hover:text-primary">
+                     inioluwaoladipupostudio@gmail.com
                    </Link>
                  </li>
               </ul>
