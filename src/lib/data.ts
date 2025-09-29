@@ -1,6 +1,7 @@
 import { DraftingCompass, CodeXml, Users, type LucideIcon } from 'lucide-react';
-import { fetchProjects, fetchJournalPosts, fetchAllSkills, fetchExperience, fetchEducation, fetchSiteSettings, fetchAboutContent, fetchContactContent, fetchGroupedSkills } from './airtable';
-
+import { fetchProjects, fetchAllSkills, fetchExperience, fetchEducation, fetchSiteSettings, fetchAboutContent, fetchContactContent, fetchGroupedSkills, deleteJournalPost, updateJournalPost, createJournalPost } from './airtable';
+import { fetchRSSFeed } from './rss';
+import { summarizePost } from '@/ai/flows/summarize-post-flow';
 
 export type Project = {
   id: string;
@@ -83,13 +84,35 @@ export type ContactContent = {
     ctaLine: string;
 }
 
+async function getJournalPostsFromRss(): Promise<JournalPost[]> {
+    const feedItems = await fetchRSSFeed(process.env.SUBSTACK_URL || '');
+    
+    const journalPosts = await Promise.all(feedItems.map(async (item, index) => {
+        // Use AI to get a summary and category
+        const { description, category } = await summarizePost({ content: item.content || '' });
+        
+        return {
+            id: item.link,
+            title: item.title,
+            link: item.link,
+            description: description,
+            category: category,
+            // Cycle through placeholder images
+            imageId: `journal-${(index % 3) + 1}`,
+        };
+    }));
+
+    return journalPosts;
+}
+
+
 // "Database" object with functions to fetch data on the server
 export const db = {
     getSiteSettings: fetchSiteSettings,
     getAboutContent: fetchAboutContent,
     getContactContent: fetchContactContent,
     getProjects: fetchProjects,
-    getJournalPosts: fetchJournalPosts,
+    getJournalPosts: getJournalPostsFromRss,
     getGroupedSkills: async (): Promise<SkillCategory[]> => {
         try {
             const skills = await fetchGroupedSkills();

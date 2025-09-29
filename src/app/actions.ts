@@ -65,7 +65,7 @@ export async function updateSiteSettingsAction(id: string, values: SiteSettings)
       success: true,
       message: 'Site settings updated successfully!',
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     return {
       success: false,
@@ -84,7 +84,7 @@ export async function updateAboutContentAction(id: string, values: AboutContent)
         success: true,
         message: 'About page content updated successfully!',
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       return {
         success: false,
@@ -102,7 +102,7 @@ export async function updateAboutContentAction(id: string, values: AboutContent)
         success: true,
         message: 'Contact section updated successfully!',
       };
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       return {
         success: false,
@@ -118,7 +118,7 @@ export async function createProject(data: Partial<Project>) {
     revalidatePath('/work');
     revalidatePath('/admin');
     return { success: true, message: 'Project created successfully.' };
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     return { success: false, message: 'Failed to create project.' };
   }
@@ -131,7 +131,7 @@ export async function updateProject(id: string, data: Partial<Project>) {
     revalidatePath('/work');
     revalidatePath('/admin');
     return { success: true, message: 'Project updated successfully.' };
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     return { success: false, message: 'Failed to update project.' };
   }
@@ -143,7 +143,7 @@ export async function deleteProject(id: string) {
     revalidatePath('/work');
     revalidatePath('/admin');
     return { success: true, message: 'Project deleted successfully.' };
-  } catch (error) {
+  } catch (error: any) {
     console.error(error);
     return { success: false, message: 'Failed to delete project.' };
   }
@@ -156,7 +156,7 @@ export async function createJournalPost(data: Omit<JournalPost, 'id'>) {
       revalidatePath('/journal');
       revalidatePath('/admin');
       return { success: true, message: 'Journal post created successfully.' };
-    } catch (error)
+    } catch (error: any)
 {
       console.error(error);
       return { success: false, message: 'Failed to create journal post.' };
@@ -169,7 +169,7 @@ export async function createJournalPost(data: Omit<JournalPost, 'id'>) {
       revalidatePath('/journal');
       revalidatePath('/admin');
       return { success: true, message: 'Journal post updated successfully.' };
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       return { success: false, message: 'Failed to update journal post.' };
     }
@@ -181,7 +181,7 @@ export async function createJournalPost(data: Omit<JournalPost, 'id'>) {
       revalidatePath('/journal');
       revalidatePath('/admin');
       return { success: true, message: 'Journal post deleted successfully.' };
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       return { success: false, message: 'Failed to delete journal post.' };
     }
@@ -194,7 +194,7 @@ export async function createSkill(data: Omit<Skill, 'id'>) {
       revalidatePath('/');
       revalidatePath('/admin');
       return { success: true, message: 'Skill created successfully.' };
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       return { success: false, message: 'Failed to create skill.' };
     }
@@ -206,7 +206,7 @@ export async function createSkill(data: Omit<Skill, 'id'>) {
       revalidatePath('/');
       revalidatePath('/admin');
       return { success: true, message: 'Skill updated successfully.' };
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       return { success: false, message: 'Failed to update skill.' };
     }
@@ -218,7 +218,7 @@ export async function createSkill(data: Omit<Skill, 'id'>) {
       revalidatePath('/');
       revalidatePath('/admin');
       return { success: true, message: 'Skill deleted successfully.' };
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       return { success: false, message: 'Failed to delete skill.' };
     }
@@ -235,7 +235,7 @@ export async function createSkill(data: Omit<Skill, 'id'>) {
       await createRecord(table, data);
       revalidateCVPaths();
       return { success: true, message: 'CV item created successfully.' };
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       return { success: false, message: 'Failed to create CV item.' };
     }
@@ -246,7 +246,7 @@ export async function createSkill(data: Omit<Skill, 'id'>) {
       await updateRecord(table, id, data);
       revalidateCVPaths();
       return { success: true, message: 'CV item updated successfully.' };
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       return { success: false, message: 'Failed to update CV item.' };
     }
@@ -257,7 +257,7 @@ export async function createSkill(data: Omit<Skill, 'id'>) {
       await deleteRecord(table, id);
       revalidateCVPaths();
       return { success: true, message: 'CV item deleted successfully.' };
-    } catch (error) {
+    } catch (error: any) {
       console.error(error);
       return { success: false, message: 'Failed to delete CV item.' };
     }
