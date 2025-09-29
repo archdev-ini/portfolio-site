@@ -8,46 +8,46 @@ if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
 
 const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
 
-const getRecords = async <T extends FieldSet>(tableName: string): Promise<Records<T>> => {
+const getRecords = async <T extends FieldSet>(tableNameOrId: string): Promise<Records<T>> => {
     try {
-        const records = await base(tableName).select().all();
+        const records = await base(tableNameOrId).select().all();
         return records as Records<T>;
     } catch (err: any) {
-        console.warn(`[Airtable] Warning: Could not fetch records from table "${tableName}". It might be missing, misnamed, or the API key may be invalid. The app will proceed with empty data for this section. Error: ${err.message}`);
+        console.warn(`[Airtable] Warning: Could not fetch records from table "${tableNameOrId}". It might be missing, misnamed, or the API key may be invalid. The app will proceed with empty data for this section. Error: ${err.message}`);
         return []; // Resolve with an empty array on error to prevent crashing
     }
 };
 
-export const createRecord = async (tableName: string, fields: { [key: string]: any }) => {
+export const createRecord = async (tableNameOrId: string, fields: { [key: string]: any }) => {
     try {
-        const createdRecords = await base(tableName).create([{ fields }]);
+        const createdRecords = await base(tableNameOrId).create([{ fields }]);
         return createdRecords[0];
     } catch (err: any) {
-        console.error(`[Airtable] Error creating record in table "${tableName}": ${err.message}`);
+        console.error(`[Airtable] Error creating record in table "${tableNameOrId}": ${err.message}`);
         throw err;
     }
 }
 
-export const updateRecord = async (tableName: string, recordId: string, fields: { [key: string]: any }) => {
+export const updateRecord = async (tableNameOrId: string, recordId: string, fields: { [key: string]: any }) => {
     try {
         // Airtable API expects comma-separated fields to be arrays, so we convert them back
         if (fields.technologies && Array.isArray(fields.technologies)) {
             fields.technologies = fields.technologies.join(',');
         }
        
-        const updatedRecords = await base(tableName).update([{ id: recordId, fields }]);
+        const updatedRecords = await base(tableNameOrId).update([{ id: recordId, fields }]);
         return updatedRecords[0];
     } catch (err: any) {
-        console.error(`[Airtable] Error updating record in table "${tableName}": ${err.message}`);
+        console.error(`[Airtable] Error updating record in table "${tableNameOrId}": ${err.message}`);
         throw err;
     }
 };
 
-export const deleteRecord = async (tableName: string, recordId: string) => {
+export const deleteRecord = async (tableNameOrId: string, recordId: string) => {
     try {
-        await base(tableName).destroy([recordId]);
+        await base(tableNameOrId).destroy([recordId]);
     } catch (err: any) {
-        console.error(`[Airtable] Error deleting record in table "${tableName}": ${err.message}`);
+        console.error(`[Airtable] Error deleting record in table "${tableNameOrId}": ${err.message}`);
         throw err;
     }
 }
@@ -150,7 +150,7 @@ export const fetchEducation = async (): Promise<CVItem[]> => {
 }
 
 export const fetchSiteSettings = async (): Promise<any> => {
-    const records = await getRecords('SiteSettings');
+    const records = await getRecords('tblMY4eE8OwgUlpgw'); // SiteSettings
     const settings = records[0];
     if (!settings) {
         console.warn("[Airtable] No record found in 'SiteSettings' table. Using fallback data.");
@@ -158,20 +158,20 @@ export const fetchSiteSettings = async (): Promise<any> => {
     }
     return {
         id: settings.id,
-        siteTitle: settings.fields.siteTitle,
+        siteTitle: settings.fields['fld5rZgC1vvA9lo0w'], // siteTitle
         hero: {
-            headline: settings.fields.heroHeadline,
-            tagline: settings.fields.heroTagline,
-            intro: settings.fields.heroIntro,
+            headline: settings.fields['fldPNj1TaEjE1nnGs'], // heroHeadline
+            tagline: settings.fields['fld7xiVvrh9IwQNjW'], // heroTagline
+            intro: settings.fields['fldmflpNaA4s7xW3D'], // heroIntro
         },
         footer: {
-            text: settings.fields.footerText,
+            text: settings.fields['fldmUOtYEgXpXx57t'], // footerText
             socialLinks: [
-                { name: 'Github', href: settings.fields.socialGithub },
-                { name: 'Twitter', href: settings.fields.socialTwitter },
-                { name: 'LinkedIn', href: settings.fields.socialLinkedIn },
-                { name: 'Substack', href: settings.fields.socialSubstack },
-                { name: 'Email', href: settings.fields.socialEmail ? `mailto:${settings.fields.socialEmail}` : '' },
+                { name: 'Github', href: settings.fields['fldS42ps9Mbs6DK50'] }, // socialGithub
+                { name: 'Twitter', href: settings.fields['fldaEJGRTBUvxdjZs'] }, // socialTwitter
+                { name: 'LinkedIn', href: settings.fields['fldCNkLcgB26tE8IF'] }, // socialLinkedIn
+                { name: 'Substack', href: settings.fields['fldT26ZTkfkbcqJ2d'] }, // socialSubstack
+                { name: 'Email', href: settings.fields['fld3VghqIG5dAMJqM'] ? `mailto:${settings.fields['fld3VghqIG5dAMJqM']}` : '' }, // socialEmail
             ].filter(link => link.href)
         }
     };
@@ -180,28 +180,28 @@ export const fetchSiteSettings = async (): Promise<any> => {
 export const updateSiteSettings = async (id: string, data: Partial<SiteSettings>) => {
     const fieldsToUpdate: { [key: string]: any } = {};
 
-    if (data.siteTitle) fieldsToUpdate.siteTitle = data.siteTitle;
-    if (data.hero?.headline) fieldsToUpdate.heroHeadline = data.hero.headline;
-    if (data.hero?.tagline) fieldsToUpdate.heroTagline = data.hero.tagline;
-    if (data.hero?.intro) fieldsToUpdate.heroIntro = data.hero.intro;
-    if (data.footer?.text) fieldsToUpdate.footerText = data.footer.text;
+    if (data.siteTitle) fieldsToUpdate['fld5rZgC1vvA9lo0w'] = data.siteTitle;
+    if (data.hero?.headline) fieldsToUpdate['fldPNj1TaEjE1nnGs'] = data.hero.headline;
+    if (data.hero?.tagline) fieldsToUpdate['fld7xiVvrh9IwQNjW'] = data.hero.tagline;
+    if (data.hero?.intro) fieldsToUpdate['fldmflpNaA4s7xW3D'] = data.hero.intro;
+    if (data.footer?.text) fieldsToUpdate['fldmUOtYEgXpXx57t'] = data.footer.text;
     
     if (data.footer?.socialLinks) {
         data.footer.socialLinks.forEach(link => {
-            if (link.name === 'Github') fieldsToUpdate.socialGithub = link.href;
-            if (link.name === 'Twitter') fieldsToUpdate.socialTwitter = link.href;
-            if (link.name === 'LinkedIn') fieldsToUpdate.socialLinkedIn = link.href;
-            if (link.name === 'Substack') fieldsToUpdate.socialSubstack = link.href;
-            if (link.name === 'Email') fieldsToUpdate.socialEmail = link.href.replace('mailto:', '');
+            if (link.name === 'Github') fieldsToUpdate['fldS42ps9Mbs6DK50'] = link.href;
+            if (link.name === 'Twitter') fieldsToUpdate['fldaEJGRTBUvxdjZs'] = link.href;
+            if (link.name === 'LinkedIn') fieldsToUpdate['fldCNkLcgB26tE8IF'] = link.href;
+            if (link.name === 'Substack') fieldsToUpdate['fldT26ZTkfkbcqJ2d'] = link.href;
+            if (link.name === 'Email') fieldsToUpdate['fld3VghqIG5dAMJqM'] = link.href.replace('mailto:', '');
         });
     }
 
-    return await updateRecord('SiteSettings', id, fieldsToUpdate);
+    return await updateRecord('tblMY4eE8OwgUlpgw', id, fieldsToUpdate);
 };
 
 
 export const fetchAboutContent = async (): Promise<any> => {
-    const records = await getRecords('About');
+    const records = await getRecords('tbl8205jtYCQ3bsxE'); // About
     const record = records[0];
      if (!record || !record.fields) {
         console.warn("[Airtable] No record found in 'About' table. Using fallback data.");
@@ -210,14 +210,14 @@ export const fetchAboutContent = async (): Promise<any> => {
     const content = record.fields;
     return {
         id: record.id,
-        headline: content.headline,
-        shortText: content.shortText,
-        fullText: content.fullText ? content.fullText.split('\\n') : [],
+        headline: content['fldQsr8Ep4YtSb4la'], // headline
+        shortText: content['fld6Qkpsfki8y52dV'], // shortText
+        fullText: content['fldc3q6xSsQE6C1jp'] ? content['fldc3q6xSsQE6C1jp'].split('\\n') : [], // fullText
         highlights: [
-            { title: 'Architecture', description: content.highlightArchitecture },
-            { title: 'Web3 / Development', description: content.highlightWeb3 },
-            { title: 'Writing', description: content.highlightWriting },
-            { title: 'Community', description: content.highlightCommunity },
+            { title: 'Architecture', description: content['fldTOlj7X08mQgt6p'] }, // highlightArchitecture
+            { title: 'Web3 / Development', description: content['fld4SaISRNGcf0iX9'] }, // highlightWeb3
+            { title: 'Writing', description: content['fldPlm9g41TZSNunF'] }, // highlightWriting
+            { title: 'Community', description: content['fldVbF6Jl3a0IeK8v'] }, // highlightCommunity
         ].filter(h => h.description),
         profileImageId: content.profileImageId
     };
@@ -226,21 +226,21 @@ export const fetchAboutContent = async (): Promise<any> => {
 export const updateAboutContent = async (id: string, data: Partial<AboutContent>) => {
     const fieldsToUpdate: { [key: string]: any } = {};
   
-    if (data.headline) fieldsToUpdate.headline = data.headline;
-    if (data.shortText) fieldsToUpdate.shortText = data.shortText;
-    if (data.fullText) fieldsToUpdate.fullText = data.fullText.join('\\n');
+    if (data.headline) fieldsToUpdate['fldQsr8Ep4YtSb4la'] = data.headline;
+    if (data.shortText) fieldsToUpdate['fld6Qkpsfki8y52dV'] = data.shortText;
+    if (data.fullText) fieldsToUpdate['fldc3q6xSsQE6C1jp'] = data.fullText.join('\\n');
     if (data.profileImageId) fieldsToUpdate.profileImageId = data.profileImageId;
   
     if (data.highlights) {
       data.highlights.forEach(highlight => {
-        if (highlight.title === 'Architecture') fieldsToUpdate.highlightArchitecture = highlight.description;
-        if (highlight.title === 'Web3 / Development') fieldsToUpdate.highlightWeb3 = highlight.description;
-        if (highlight.title === 'Writing') fieldsToUpdate.highlightWriting = highlight.description;
-        if (highlight.title === 'Community') fieldsToUpdate.highlightCommunity = highlight.description;
+        if (highlight.title === 'Architecture') fieldsToUpdate['fldTOlj7X08mQgt6p'] = highlight.description;
+        if (highlight.title === 'Web3 / Development') fieldsToUpdate['fld4SaISRNGcf0iX9'] = highlight.description;
+        if (highlight.title === 'Writing') fieldsToUpdate['fldPlm9g41TZSNunF'] = highlight.description;
+        if (highlight.title === 'Community') fieldsToUpdate['fldVbF6Jl3a0IeK8v'] = highlight.description;
       });
     }
   
-    return await updateRecord('About', id, fieldsToUpdate);
+    return await updateRecord('tbl8205jtYCQ3bsxE', id, fieldsToUpdate);
 };
 
 export const fetchContactContent = async (): Promise<any> => {
@@ -263,3 +263,4 @@ export const updateContactContent = async (id: string, data: Partial<ContactCont
     if (data.ctaLine) fieldsToUpdate.ctaLine = data.ctaLine;
     return await updateRecord('Contact', id, fieldsToUpdate);
 };
+
