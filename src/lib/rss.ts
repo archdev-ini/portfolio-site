@@ -20,8 +20,8 @@ export async function fetchRSSFeed(feedUrl: string): Promise<FeedItem[]> {
         return feedCache;
     }
 
-    if (!feedUrl) {
-        console.warn('SUBSTACK_URL is not defined. Skipping RSS feed fetch.');
+    if (!feedUrl || feedUrl.includes('your-substack-url.com')) {
+        console.warn('SUBSTACK_URL is not defined or is a placeholder. Skipping RSS feed fetch.');
         return [];
     }
     
