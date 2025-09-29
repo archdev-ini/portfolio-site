@@ -14,7 +14,7 @@ import { db } from '@/lib/data';
 async function getPortfolioContext() {
   const projects = await db.getProjects();
   const journalPosts = await db.getJournalPosts();
-  const skills = await db.getSkills();
+  const skills = await db.getGroupedSkills();
   const cvExperience = await db.getCVExperience();
   const cvEducation = await db.getCVEducation();
 
@@ -27,7 +27,7 @@ async function getPortfolioContext() {
       )
       .join('\n')}
 
-    JOURNAL POSTS:
+    JOURNAL POSTS (from Substack):
     ${journalPosts.map((p) => `- ${p.title}: ${p.description}`).join('\n')}
 
     SKILLS:

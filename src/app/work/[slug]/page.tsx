@@ -35,8 +35,8 @@ export default async function ProjectPage({ params }: { params: { slug: string }
     notFound();
   }
 
-  const projectImage = project.imageId ? { imageUrl: project.imageId, description: project.title, imageHint: '' } : PlaceHolderImages.find(img => img.id === 'project-arch-1');
-  const galleryImages = project.galleryImageIds?.map(url => ({ id: url, imageUrl: url, description: 'Gallery image', imageHint: '' })) || [];
+  const projectImage = PlaceHolderImages.find(img => img.id === project.imageId);
+  const galleryImages = project.galleryImageIds.map(id => PlaceHolderImages.find(img => img.id === id));
 
 
   return (
