@@ -10,18 +10,19 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ArrowRight, MoveRight } from 'lucide-react';
 import { Button } from '../ui/button';
 import type { JournalPost } from '@/lib/data';
+import { Badge } from '../ui/badge';
 
 const SectionTitle = ({ children }: { children: React.ReactNode }) => (
     <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-4 text-center">{children}</h2>
 );
 
 export const Journal = ({ posts, isPage = false }: { posts: JournalPost[], isPage?: boolean }) => {
-  const categories = ['All', 'Reflections', 'Experiments', 'Design Notes'];
+  const allCategories = ['All', ...new Set(posts.flatMap(p => p.tags || []))];
   const [filter, setFilter] = useState('All');
   
   const allPosts = posts;
   const displayedPosts = isPage ? allPosts : allPosts.slice(0, 3);
-  const filteredPosts = filter === 'All' ? displayedPosts : displayedPosts.filter((p) => p.category === filter);
+  const filteredPosts = filter === 'All' ? displayedPosts : displayedPosts.filter((p) => p.tags?.includes(filter));
 
   return (
     <section id="journal" className="py-24 md:py-32 bg-secondary/30">
@@ -33,8 +34,8 @@ export const Journal = ({ posts, isPage = false }: { posts: JournalPost[], isPag
 
         {isPage ? (
           <Tabs value={filter} onValueChange={setFilter} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 mx-auto max-w-2xl mb-12">
-              {categories.map((category) => (
+            <TabsList className="grid w-full grid-cols-2 sm:grid-cols-3 md:grid-cols-4 mx-auto max-w-2xl mb-12">
+              {allCategories.map((category) => (
                 <TabsTrigger key={category} value={category}>
                   {category}
                 </TabsTrigger>
@@ -60,9 +61,11 @@ export const Journal = ({ posts, isPage = false }: { posts: JournalPost[], isPag
                         </div>
                       </CardHeader>
                       <CardContent className="p-6">
-                        <span className="text-xs text-primary/80 font-semibold tracking-wider uppercase">{post.category}</span>
+                        <div className="flex gap-2 mb-2">
+                          {post.tags?.map(tag => <Badge key={tag} variant="secondary">{tag}</Badge>)}
+                        </div>
                         <CardTitle className="mt-2 mb-2 font-headline text-xl group-hover:text-primary transition-colors">{post.title}</CardTitle>
-                        <p className="text-sm text-foreground/70">{post.description}</p>
+                        <p className="text-sm text-foreground/70 line-clamp-3">{post.description}</p>
                         <div className="mt-4 text-sm font-semibold text-primary flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
                           Read More <ArrowRight className="ml-2 h-4 w-4" />
                         </div>
@@ -96,7 +99,7 @@ export const Journal = ({ posts, isPage = false }: { posts: JournalPost[], isPag
                       </CardHeader>
                       <CardContent className="p-6">
                         <CardTitle className="mb-2 font-headline text-xl group-hover:text-primary transition-colors">{post.title}</CardTitle>
-                        <p className="text-sm text-foreground/70">{post.description}</p>
+                        <p className="text-sm text-foreground/70 line-clamp-3">{post.description}</p>
                         <div className="mt-4 text-sm font-semibold text-primary flex items-center opacity-0 group-hover:opacity-100 transition-opacity">
                           Read More <ArrowRight className="ml-2 h-4 w-4" />
                         </div>

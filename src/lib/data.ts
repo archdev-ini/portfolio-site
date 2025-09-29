@@ -1,7 +1,6 @@
 import { DraftingCompass, CodeXml, Users, type LucideIcon } from 'lucide-react';
 import { fetchProjects, fetchAllSkills, fetchExperience, fetchEducation, fetchSiteSettings, fetchAboutContent, fetchContactContent, fetchGroupedSkills, deleteJournalPost, updateJournalPost, createJournalPost } from './airtable';
-import { fetchRSSFeed } from './rss';
-import { summarizePost } from '@/ai/flows/summarize-post-flow';
+import { fetchRSSFeed, type FeedItem } from './rss';
 
 export type Project = {
   id: string;
@@ -24,10 +23,11 @@ export type Project = {
 export type JournalPost = {
   id: string;
   title: string;
-  category: 'Reflections' | 'Experiments' | 'Design Notes';
+  category: 'Reflections' | 'Experiments' | 'Design Notes' | string; // Allow for other tags
   description: string;
   imageId: string;
   link: string;
+  tags?: string[];
 };
 
 export type Skill = {
@@ -84,25 +84,44 @@ export type ContactContent = {
     ctaLine: string;
 }
 
-async function getJournalPostsFromRss(): Promise<JournalPost[]> {
-    const feedItems = await fetchRSSFeed(process.env.SUBSTACK_URL || '');
-    
-    const journalPosts = await Promise.all(feedItems.map(async (item, index) => {
-        // Use AI to get a summary and category
-        const { description, category } = await summarizePost({ content: item.content || '' });
-        
-        return {
-            id: item.link,
-            title: item.title,
-            link: item.link,
-            description: description,
-            category: category,
-            // Cycle through placeholder images
-            imageId: `journal-${(index % 3) + 1}`,
-        };
-    }));
+function mapFeedItemToJournalPost(item: FeedItem, index: number): JournalPost {
+    const description = item.contentSnippet ? item.contentSnippet.substring(0, 150) + '...' : 'No description available.';
+    return {
+        id: item.link,
+        title: item.title,
+        link: item.link,
+        description: description,
+        category: item.categories?.[0] || 'Uncategorized',
+        tags: item.categories || [],
+        imageId: `journal-${(index % 3) + 1}`,
+    };
+}
 
-    return journalPosts;
+
+async function getJournalPostsFromRss(): Promise<JournalPost[]> {
+    const feedUrl = process.env.SUBSTACK_URL;
+    if (!feedUrl) return [];
+
+    const feedItems = await fetchRSSFeed(feedUrl);
+    
+    const journalTags = ['Studio Notes', 'Building Futures', 'IO Lab'];
+
+    return feedItems
+        .filter(item => item.categories?.some(cat => journalTags.includes(cat)))
+        .map(mapFeedItemToJournalPost);
+}
+
+async function getProjectPostsFromRss(): Promise<JournalPost[]> {
+    const feedUrl = process.env.SUBSTACK_URL;
+    if (!feedUrl) return [];
+
+    const feedItems = await fetchRSSFeed(feedUrl);
+    
+    const projectTags = ['Project Journal', 'Design Sketches'];
+
+    return feedItems
+        .filter(item => item.categories?.some(cat => projectTags.includes(cat)))
+        .map(mapFeedItemToJournalPost);
 }
 
 
@@ -113,6 +132,7 @@ export const db = {
     getContactContent: fetchContactContent,
     getProjects: fetchProjects,
     getJournalPosts: getJournalPostsFromRss,
+    getProjectPosts: getProjectPostsFromRss,
     getGroupedSkills: async (): Promise<SkillCategory[]> => {
         try {
             const skills = await fetchGroupedSkills();

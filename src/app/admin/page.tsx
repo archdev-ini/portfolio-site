@@ -9,6 +9,8 @@ import { SkillsList } from './_components/skills-list';
 import { ContactForm as ContactContentForm } from './_components/contact-form';
 import { EducationList } from './_components/education-list';
 import { ExperienceList } from './_components/experience-list';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { Terminal } from 'lucide-react';
 
 
 export default async function AdminPage() {
@@ -86,11 +88,17 @@ export default async function AdminPage() {
                         <CardHeader>
                             <CardTitle>Manage Journal</CardTitle>
                             <CardDescription>
-                                Add, edit, or delete journal entries.
+                                Journal entries are now pulled automatically from your Substack RSS feed.
                             </CardDescription>
                         </CardHeader>
                         <CardContent>
-                           <JournalList posts={journalPosts} />
+                          <Alert>
+                            <Terminal className="h-4 w-4" />
+                            <AlertTitle>Heads up!</AlertTitle>
+                            <AlertDescription>
+                              To manage your journal, simply publish new posts on Substack with the appropriate tags (`Studio Notes`, `Building Futures`, `IO Lab`). Your website will update automatically.
+                            </AlertDescription>
+                          </Alert>
                         </CardContent>
                     </Card>
                 </TabsContent>

@@ -1,12 +1,13 @@
 import Parser from 'rss-parser';
 import { parse } from 'node-html-parser';
 
-type FeedItem = {
+export type FeedItem = {
     title: string;
     link: string;
     pubDate?: string;
     content?: string;
     contentSnippet?: string;
+    categories?: string[];
 };
 
 // Add a cache to avoid re-fetching the RSS feed on every request during development
@@ -25,20 +26,32 @@ export async function fetchRSSFeed(feedUrl: string): Promise<FeedItem[]> {
     }
     
     try {
-        const parser = new Parser();
+        const parser = new Parser({
+            customFields: {
+                item: ['category'],
+            }
+        });
         const feed = await parser.parseURL(feedUrl);
         
         const items = feed.items.map(item => {
-            // Extract text from the HTML content to pass to the AI
             const root = parse(item['content:encoded'] || '');
             const textContent = root.structuredText;
+
+            // Ensure categories are always an array of strings
+            let categories: string[] = [];
+            if (Array.isArray(item.category)) {
+                categories = item.category.map(c => (typeof c === 'string' ? c : ''));
+            } else if (typeof item.category === 'string') {
+                categories = [item.category];
+            }
 
             return {
                 title: item.title || 'Untitled Post',
                 link: item.link || '#',
                 pubDate: item.pubDate,
                 content: textContent,
-                contentSnippet: item.contentSnippet,
+                contentSnippet: item['content:encodedSnippet'] || item.contentSnippet,
+                categories,
             };
         });
         
