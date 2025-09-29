@@ -9,22 +9,14 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { ExternalLink, Calendar, User, Tag } from 'lucide-react';
 import Link from 'next/link';
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel";
 
+// Since pages are generated dynamically from the RSS feed, we can't know all slugs at build time.
+// This tells Next.js to generate pages on-demand.
 export async function generateStaticParams() {
   const projects = await db.getProjects();
-  // Filter out projects that don't have a slug to prevent build errors
-  return projects
-    .filter(project => project.slug)
-    .map((project) => ({
+  return projects.map((project) => ({
       slug: project.slug,
-    }));
+  }));
 }
 
 export default async function ProjectPage({ params }: { params: { slug: string } }) {
@@ -35,9 +27,8 @@ export default async function ProjectPage({ params }: { params: { slug: string }
     notFound();
   }
 
-  const projectImage = PlaceHolderImages.find(img => img.id === project.imageId);
-  const galleryImages = project.galleryImageIds.map(id => PlaceHolderImages.find(img => img.id === id));
-
+  // Find a placeholder image. The logic can be improved to be more specific.
+  const projectImage = PlaceHolderImages.find(img => img.id.startsWith('project-'));
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -47,98 +38,44 @@ export default async function ProjectPage({ params }: { params: { slug: string }
           <header className="py-12 md:py-24 bg-secondary/30">
             <div className="container">
               <div className="max-w-4xl mx-auto text-center">
-                <p className="text-primary font-semibold mb-2">{project.category}</p>
+                <div className="flex justify-center gap-2 mb-4">
+                  {project.tags?.map(tag => (
+                    <Badge key={tag} variant="secondary">{tag}</Badge>
+                  ))}
+                </div>
                 <h1 className="text-4xl md:text-6xl font-bold tracking-tighter font-headline">
                   {project.title}
                 </h1>
-                <p className="mt-4 text-lg md:text-xl text-foreground/70 max-w-3xl mx-auto">
+                 <p className="mt-4 text-lg md:text-xl text-foreground/70 max-w-3xl mx-auto">
                   {project.description}
                 </p>
               </div>
-              <div className="relative aspect-[16/9] w-full max-w-5xl mx-auto mt-12 rounded-xl overflow-hidden shadow-2xl">
-                {projectImage && (
+              {projectImage && (
+                <div className="relative aspect-[16/9] w-full max-w-5xl mx-auto mt-12 rounded-xl overflow-hidden shadow-2xl">
                   <Image
-                    src={projectImage.imageUrl}
-                    alt={project.title}
-                    fill
-                    className="object-cover"
-                    data-ai-hint={projectImage.imageHint}
+                      src={projectImage.imageUrl}
+                      alt={project.title}
+                      fill
+                      className="object-cover"
+                      data-ai-hint={projectImage.imageHint}
                   />
-                )}
-              </div>
+                </div>
+              )}
             </div>
           </header>
 
           <div className="container py-16 md:py-24">
-            <div className="grid grid-cols-1 lg:grid-cols-4 gap-12">
-              <aside className="lg:col-span-1">
-                <div className="sticky top-24">
-                  <h3 className="font-headline text-lg font-semibold mb-6">Project Details</h3>
-                  <div className="space-y-5 text-sm">
-                    <div className="flex items-start gap-3">
-                      <User className="w-4 h-4 mt-1 text-primary/80" />
-                      <div>
-                        <p className="font-semibold">My Role</p>
-                        <p className="text-foreground/70">{project.role}</p>
-                      </div>
-                    </div>
-                     <div className="flex items-start gap-3">
-                      <Calendar className="w-4 h-4 mt-1 text-primary/80" />
-                      <div>
-                        <p className="font-semibold">Duration</p>
-                        <p className="text-foreground/70">{project.duration}</p>
-                      </div>
-                    </div>
-                     <div className="flex items-start gap-3">
-                      <Tag className="w-4 h-4 mt-1 text-primary/80" />
-                      <div>
-                        <p className="font-semibold">Technologies</p>
-                        <div className="flex flex-wrap gap-2 mt-1">
-                          {project.technologies.map(tech => (
-                            <Badge key={tech} variant="secondary">{tech}</Badge>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  {project.link && project.link !== '#' && (
-                    <Button asChild className="w-full mt-8">
+            <div className="max-w-3xl mx-auto">
+                 {/* The project content is the full post from Substack */}
+                <div className="prose prose-invert max-w-none text-foreground/80 text-lg" dangerouslySetInnerHTML={{ __html: project.content }} />
+                
+                <div className="mt-16 text-center">
+                    <Button asChild className="w-full md:w-auto" size="lg">
                       <Link href={project.link} target="_blank">
-                        Live Project <ExternalLink className="ml-2" />
+                        Read Full Post on Substack <ExternalLink className="ml-2" />
                       </Link>
                     </Button>
-                  )}
                 </div>
-              </aside>
-
-              <div className="lg:col-span-3">
-                <div className="prose prose-invert max-w-none text-foreground/80 text-lg" dangerouslySetInnerHTML={{ __html: project.content }} />
-
-                {galleryImages && galleryImages.length > 0 && (
-                  <div className="mt-16">
-                    <h3 className="font-headline text-2xl font-bold text-foreground mb-8">Gallery</h3>
-                    <Carousel className="w-full max-w-3xl mx-auto">
-                      <CarouselContent>
-                        {galleryImages.map((image) => image && (
-                          <CarouselItem key={image.id}>
-                            <div className="relative aspect-video rounded-lg overflow-hidden shadow-lg">
-                              <Image
-                                src={image.imageUrl}
-                                alt={image.description}
-                                fill
-                                className="object-cover"
-                                data-ai-hint={image.imageHint}
-                              />
-                            </div>
-                          </CarouselItem>
-                        ))}
-                      </CarouselContent>
-                      <CarouselPrevious />
-                      <CarouselNext />
-                    </Carousel>
-                  </div>
-                )}
-              </div>
             </div>
           </div>
         </article>

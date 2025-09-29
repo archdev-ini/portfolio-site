@@ -11,7 +11,8 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
 );
 
 export const WorkPreview = ({ projects }: { projects: Project[] }) => {
-  const featuredProjects = projects.filter(p => p.featured);
+  // Since "featured" isn't a property from RSS, let's just show the first 3 projects.
+  const featuredProjects = projects.slice(0, 3);
 
   return (
     <section id="work" className="py-24 md:py-32 bg-secondary/30">

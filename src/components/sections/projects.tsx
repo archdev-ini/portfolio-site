@@ -16,7 +16,7 @@ const SectionTitle = ({ children }: { children: React.ReactNode }) => (
 );
 
 export const Projects = ({ projects, isPage = false }: { projects: Project[], isPage?: boolean }) => {
-  const categories = ['All', 'Architecture', 'Web3', 'Writing', 'Community'];
+  const allCategories = ['All', ...new Set(projects.map(p => p.category).filter(Boolean))];
 
   const [filter, setFilter] = useState('All');
   const [searchTerm, setSearchTerm] = useState('');
@@ -33,8 +33,8 @@ export const Projects = ({ projects, isPage = false }: { projects: Project[], is
       const searchIn = [
         project.title,
         project.description,
-        project.overview,
-        ...project.technologies,
+        project.content,
+        ...(project.tags || []),
       ].join(' ').toLowerCase();
 
       return searchIn.includes(lowerCaseSearch);
@@ -53,7 +53,7 @@ export const Projects = ({ projects, isPage = false }: { projects: Project[], is
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
                 <Input
                     type="search"
-                    placeholder="Search by title, technology, etc..."
+                    placeholder="Search by title, tag, etc..."
                     className="w-full pl-10"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
@@ -63,7 +63,7 @@ export const Projects = ({ projects, isPage = false }: { projects: Project[], is
 
         <Tabs value={filter} onValueChange={setFilter} className="w-full">
           <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 mx-auto max-w-2xl mb-12">
-            {categories.map((category) => (
+            {allCategories.map((category) => (
               <TabsTrigger key={category} value={category}>
                 {category}
               </TabsTrigger>
@@ -96,7 +96,7 @@ export const Projects = ({ projects, isPage = false }: { projects: Project[], is
                 <CardFooter className="p-6 pt-0">
                   <Button variant="outline" asChild className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                     <Link href={`/work/${project.slug}`}>
-                      View Case Study <ArrowRight className="ml-2 h-4 w-4" />
+                      View Post <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
                 </CardFooter>

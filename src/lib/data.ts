@@ -1,33 +1,23 @@
 import { DraftingCompass, CodeXml, Users, type LucideIcon } from 'lucide-react';
 import { fetchRSSFeed, type FeedItem } from './rss';
-import fs from 'fs';
-import path from 'path';
-import matter from 'gray-matter';
-import { marked } from 'marked';
 
 export type Project = {
   id: string;
   slug: string;
   title: string;
-  category: 'Architecture' | 'Web3' | 'Writing' | 'Community';
+  category: string; // From RSS feed tags
   description: string;
-  imageId: string | null;
-  galleryImageIds: string[];
+  imageId: string;
   link: string;
-  role: string;
-  duration: string;
-  technologies: string[];
-  overview: string;
-  process: string;
-  outcomes: string;
-  content: string; // HTML content from markdown
-  featured?: boolean;
+  content: string; // Full content from RSS
+  tags?: string[];
+  featured?: boolean; // We might need to derive this differently
 };
 
 export type JournalPost = {
   id: string;
   title: string;
-  category: 'Reflections' | 'Experiments' | 'Design Notes' | string; // Allow for other tags
+  category: string; 
   description: string;
   imageId: string;
   link: string;
@@ -177,26 +167,17 @@ const MOCK_CV_EDUCATION: CVItem[] = [
     { id: 'edu1', date: '2020 - 2025', title: 'Master of Architecture', subtitle: 'University of Digital Futures', description: 'Focusing on computational design and sustainable urbanism.' },
 ];
 
-const projectsDirectory = path.join(process.cwd(), 'src/content/projects');
-
-async function getProjects(): Promise<Project[]> {
-    const fileNames = fs.readdirSync(projectsDirectory);
-    const allProjectsData = await Promise.all(fileNames.map(async (fileName) => {
-        const slug = fileName.replace(/\.md$/, '');
-        const fullPath = path.join(projectsDirectory, fileName);
-        const fileContents = fs.readFileSync(fullPath, 'utf8');
-        const { data, content } = matter(fileContents);
-        const htmlContent = await marked.parse(content);
-
-        return {
-            id: slug,
-            slug,
-            content: htmlContent,
-            ...data,
-        } as Project;
-    }));
-
-    return allProjectsData;
+// Helper to create a slug from a URL
+const createSlugFromLink = (link: string): string => {
+    try {
+        const url = new URL(link);
+        const pathParts = url.pathname.split('/');
+        // Get the last part of the path, which is usually the post slug
+        return pathParts[pathParts.length - 1] || 'post';
+    } catch (e) {
+        // Fallback for invalid URLs
+        return 'post' + Math.random().toString(36).substring(7);
+    }
 }
 
 
@@ -213,6 +194,37 @@ function mapFeedItemToJournalPost(item: FeedItem, index: number): JournalPost {
     };
 }
 
+function mapFeedItemToProject(item: FeedItem, index: number): Project {
+    const description = item.contentSnippet ? item.contentSnippet.substring(0, 150) + '...' : 'No description available.';
+    return {
+        id: item.link,
+        slug: createSlugFromLink(item.link),
+        title: item.title,
+        link: item.link,
+        description: description,
+        category: item.categories?.find(cat => ['Architecture', 'Web3', 'Writing', 'Community'].includes(cat)) || 'General',
+        tags: item.categories || [],
+        imageId: `project-${(index % 3) + 1}`,
+        content: item.content || '',
+        // featured: item.categories?.includes('Featured') // Example of how featured could work
+    };
+}
+
+
+async function getProjects(): Promise<Project[]> {
+    const feedUrl = process.env.SUBSTACK_URL;
+    if (!feedUrl) return [];
+
+    const feedItems = await fetchRSSFeed(feedUrl);
+    
+    const projectTags = ['Project Journal', 'Design Sketches'];
+
+    return feedItems
+        .filter(item => item.categories?.some(cat => projectTags.includes(cat)))
+        .map(mapFeedItemToProject);
+}
+
+
 async function getJournalPostsFromRss(): Promise<JournalPost[]> {
     const feedUrl = process.env.SUBSTACK_URL;
     if (!feedUrl) return [];
@@ -226,19 +238,6 @@ async function getJournalPostsFromRss(): Promise<JournalPost[]> {
         .map(mapFeedItemToJournalPost);
 }
 
-async function getProjectPostsFromRss(): Promise<JournalPost[]> {
-    const feedUrl = process.env.SUBSTACK_URL;
-    if (!feedUrl) return [];
-
-    const feedItems = await fetchRSSFeed(feedUrl);
-    
-    const projectTags = ['Project Journal', 'Design Sketches'];
-
-    return feedItems
-        .filter(item => item.categories?.some(cat => projectTags.includes(cat)))
-        .map(mapFeedItemToJournalPost);
-}
-
 // "Database" object with functions to fetch data on the server
 export const db = {
     getSiteSettings: async (): Promise<SiteSettings> => MOCK_SITE_SETTINGS,
@@ -246,7 +245,13 @@ export const db = {
     getContactContent: async (): Promise<ContactContent> => MOCK_CONTACT_CONTENT,
     getProjects: getProjects,
     getJournalPosts: getJournalPostsFromRss,
-    getProjectPosts: getProjectPostsFromRss,
+    // Note: getProjectPosts is deprecated, use getProjects
+    getProjectPosts: async (): Promise<JournalPost[]> => {
+        console.warn("getProjectPosts is deprecated, use getProjects which returns Project[] type");
+        const projects = await getProjects();
+        // This is a temporary adapter. You should update the call sites.
+        return projects.map(p => ({...p, category: p.category}));
+    },
     getGroupedSkills: async (): Promise<SkillCategory[]> => MOCK_SKILLS,
     getCVExperience: async (): Promise<CVItem[]> => MOCK_CV_EXPERIENCE,
     getCVEducation: async (): Promise<CVItem[]> => MOCK_CV_EDUCATION,

@@ -19,11 +19,11 @@ async function getPortfolioContext() {
   const cvEducation = await db.getCVEducation();
 
   return `
-    PROJECTS:
+    PROJECTS (from Substack):
     ${projects
       .map(
         (p) =>
-          `- ${p.title} (${p.category}): ${p.description}. Key details: ${p.overview}`
+          `- ${p.title}: ${p.description}.`
       )
       .join('\n')}
 
