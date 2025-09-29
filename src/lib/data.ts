@@ -1,5 +1,5 @@
 import { DraftingCompass, CodeXml, Users, type LucideIcon } from 'lucide-react';
-import { fetchProjects, fetchAllSkills, fetchExperience, fetchEducation, fetchSiteSettings, fetchAboutContent, fetchContactContent, fetchGroupedSkills, deleteJournalPost, updateJournalPost, createJournalPost } from './airtable';
+import { fetchProjects, fetchAllSkills, fetchExperience, fetchEducation, fetchSiteSettings, fetchAboutContent, fetchContactContent, fetchGroupedSkills } from './airtable';
 import { fetchRSSFeed, type FeedItem } from './rss';
 
 export type Project = {

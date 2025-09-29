@@ -4,7 +4,6 @@ import { AboutForm } from './_components/about-form';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ProjectsList } from './_components/projects-list';
-import { JournalList } from './_components/journal-list';
 import { SkillsList } from './_components/skills-list';
 import { ContactForm as ContactContentForm } from './_components/contact-form';
 import { EducationList } from './_components/education-list';
@@ -17,7 +16,6 @@ export default async function AdminPage() {
   const siteSettings = await db.getSiteSettings();
   const aboutContent = await db.getAboutContent();
   const projects = await db.getProjects();
-  const journalPosts = await db.getJournalPosts();
   const allSkills = await db.getAllSkills();
   const experience = await db.getCVExperience();
   const education = await db.getCVEducation();

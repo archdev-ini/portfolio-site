@@ -149,44 +149,6 @@ export async function deleteProject(id: string) {
   }
 }
 
-// Journal Actions
-export async function createJournalPost(data: Omit<JournalPost, 'id'>) {
-    try {
-      await createRecord('Journal', data);
-      revalidatePath('/journal');
-      revalidatePath('/admin');
-      return { success: true, message: 'Journal post created successfully.' };
-    } catch (error: any)
-{
-      console.error(error);
-      return { success: false, message: 'Failed to create journal post.' };
-    }
-  }
-  
-  export async function updateJournalPost(id: string, data: Partial<Omit<JournalPost, 'id'>>) {
-    try {
-      await updateRecord('Journal', id, data);
-      revalidatePath('/journal');
-      revalidatePath('/admin');
-      return { success: true, message: 'Journal post updated successfully.' };
-    } catch (error: any) {
-      console.error(error);
-      return { success: false, message: 'Failed to update journal post.' };
-    }
-  }
-  
-  export async function deleteJournalPost(id: string) {
-    try {
-      await deleteRecord('Journal', id);
-      revalidatePath('/journal');
-      revalidatePath('/admin');
-      return { success: true, message: 'Journal post deleted successfully.' };
-    } catch (error: any) {
-      console.error(error);
-      return { success: false, message: 'Failed to delete journal post.' };
-    }
-  }
-
   // Skill Actions
 export async function createSkill(data: Omit<Skill, 'id'>) {
     try {

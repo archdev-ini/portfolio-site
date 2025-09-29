@@ -1,12 +1,12 @@
 
 import Airtable, { type FieldSet, type Records } from 'airtable';
-import type { Project, JournalPost, SkillCategory, CVItem, SiteSettings, AboutContent, ContactContent, Skill } from './data';
+import type { Project, CVItem, SiteSettings, AboutContent, ContactContent, Skill, SkillCategory } from './data';
 
 if (!process.env.AIRTABLE_API_KEY || !process.env.AIRTABLE_BASE_ID) {
   throw new Error('Airtable API Key or Base ID is not defined in environment variables');
 }
 
-const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID);
+const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY }).base(process.env.AIRTABLE_BASE_ID!);
 
 const getRecords = async <T extends FieldSet>(tableNameOrId: string): Promise<Records<T>> => {
     try {
@@ -72,15 +72,6 @@ const mapToProject = (record: any): Project => ({
   featured: record.fields.featured || false,
 });
 
-const mapToJournalPost = (record: any): JournalPost => ({
-  id: record.id,
-  title: record.fields.title,
-  category: record.fields.category || 'Reflections',
-  description: record.fields.description,
-  imageId: record.fields.imageId || 'journal-1',
-  link: record.fields.link || '#',
-});
-
 const mapToGroupedSkills = (records: any[]): SkillCategory[] => {
     const skillMap: { [key: string]: any } = {};
 
@@ -122,11 +113,6 @@ const mapToCVItem = (record: any): CVItem => ({
 export const fetchProjects = async (): Promise<Project[]> => {
   const records = await getRecords('Projects');
   return records.map(mapToProject);
-};
-
-export const fetchJournalPosts = async (): Promise<JournalPost[]> => {
-  const records = await getRecords('Journal');
-  return records.map(mapToJournalPost).sort((a,b) => b.id.localeCompare(a.id));
 };
 
 export const fetchGroupedSkills = async (): Promise<any[]> => {
@@ -263,4 +249,3 @@ export const updateContactContent = async (id: string, data: Partial<ContactCont
     if (data.ctaLine) fieldsToUpdate.ctaLine = data.ctaLine;
     return await updateRecord('Contact', id, fieldsToUpdate);
 };
-

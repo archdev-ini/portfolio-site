@@ -54,18 +54,7 @@ Each record in this table represents a project in your portfolio.
 
 ---
 
-### 4. Table: `Journal`
-Each record represents a journal post.
-
-- `title` (Single line text)
-- `category` (Single select) - *Options: `Reflections`, `Experiments`, `Design Notes`.*
-- `description` (Long text)
-- `imageId` (Single line text) - *An ID from `placeholder-images.json`.*
-- `link` (URL) - *Link to the full article (e.g., on Substack).*
-
----
-
-### 5. Table: `Skills`
+### 4. Table: `Skills`
 Each record is a single skill. The website will group them by category.
 
 - `name` (Single line text) - *The name of the skill (e.g., `React`).*
@@ -73,7 +62,7 @@ Each record is a single skill. The website will group them by category.
 
 ---
 
-### 6. Table: `CV_Experience`
+### 5. Table: `CV_Experience`
 Each record is a job or work experience item.
 
 - `date` (Single line text) - *e.g., `2022 - Present`.*
@@ -83,7 +72,7 @@ Each record is a job or work experience item.
 
 ---
 
-### 7. Table: `CV_Education`
+### 6. Table: `CV_Education`
 Each record is an education item.
 
 - `date` (Single line text) - *e.g., `2018 - 2022`.*
@@ -93,7 +82,7 @@ Each record is an education item.
 
 ---
 
-### 8. Table: `Contact`
+### 7. Table: `Contact`
 This table should have only **one record** for the contact section content.
 
 - `introText` (Single line text)
