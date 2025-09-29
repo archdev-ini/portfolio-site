@@ -112,16 +112,7 @@ export default async function ProjectPage({ params }: { params: { slug: string }
               </aside>
 
               <div className="lg:col-span-3">
-                <div className="prose prose-invert max-w-none text-foreground/80 text-lg">
-                  <h2 className="font-headline text-3xl font-bold text-foreground">Overview</h2>
-                  <p>{project.overview}</p>
-                  
-                  <h2 className="font-headline text-3xl font-bold text-foreground mt-12">Process</h2>
-                  <p>{project.process}</p>
-
-                  <h2 className="font-headline text-3xl font-bold text-foreground mt-12">Outcomes</h2>
-                  <p>{project.outcomes}</p>
-                </div>
+                <div className="prose prose-invert max-w-none text-foreground/80 text-lg" dangerouslySetInnerHTML={{ __html: project.content }} />
 
                 {galleryImages && galleryImages.length > 0 && (
                   <div className="mt-16">
