@@ -143,21 +143,26 @@ export function ProjectForm({ isOpen, onClose, project }: ProjectFormProps) {
 
   async function onSubmit(values: ProjectFormValues) {
     setIsUploading(true);
-    let mainImageUrl = project?.imageId; // Keep existing image if not changed
+    let mainImageUrls = project?.imageId ? [project.imageId] : [];
     let galleryImageUrls = project?.galleryImageIds || [];
-
+  
     try {
-      // Upload Main Image
-      if (values.imageId && values.imageId[0]) {
-        const dataUri = await fileToDataUri(values.imageId[0]);
-        const result = await uploadFileAction(dataUri);
-        if ('url' in result) {
-          mainImageUrl = result.url;
-        } else {
-          throw new Error(result.error);
-        }
+      // Upload Main Images
+      if (values.imageId && values.imageId.length > 0) {
+        const uploadedUrls = await Promise.all(
+          Array.from(values.imageId as FileList).map(async (file) => {
+            const dataUri = await fileToDataUri(file);
+            const result = await uploadFileAction(dataUri);
+            if ('url' in result) {
+              return result.url;
+            } else {
+              throw new Error(result.error);
+            }
+          })
+        );
+        mainImageUrls = [...mainImageUrls, ...uploadedUrls];
       }
-
+  
       // Upload Gallery Images
       if (values.galleryImageIds && values.galleryImageIds.length > 0) {
         const uploadedUrls = await Promise.all(
@@ -173,18 +178,18 @@ export function ProjectForm({ isOpen, onClose, project }: ProjectFormProps) {
         );
         galleryImageUrls = [...galleryImageUrls, ...uploadedUrls];
       }
-
+  
       const dataToSubmit = {
         ...values,
         technologies: values.technologies.split(',').map(s => s.trim()),
-        imageId: mainImageUrl ? [{ url: mainImageUrl }] : undefined,
+        imageId: mainImageUrls.length > 0 ? mainImageUrls.map(url => ({ url })) : undefined,
         galleryImageIds: galleryImageUrls.length > 0 ? galleryImageUrls.map(url => ({ url })) : undefined,
       };
-    
+      
       const result = isEditing
         ? await updateProject(project.id, dataToSubmit)
         : await createProject(dataToSubmit);
-
+  
       if (result.success) {
         toast({ title: 'Success!', description: result.message });
         onClose();
@@ -305,10 +310,10 @@ export function ProjectForm({ isOpen, onClose, project }: ProjectFormProps) {
              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <FormField control={form.control} name="imageId" render={({ field: { onChange, value, ...rest } }) => (
                   <FormItem>
-                    <FormLabel>Main Image</FormLabel>
+                    <FormLabel>Main Image(s)</FormLabel>
                     {mainImagePreview && <div className="relative w-full h-32"><Image src={mainImagePreview} alt="Main image preview" fill className="object-contain rounded-md border" /></div>}
                     <FormControl>
-                      <Input type="file" accept="image/*" onChange={e => onChange(e.target.files)} {...rest} />
+                      <Input type="file" accept="image/*" multiple onChange={e => onChange(e.target.files)} {...rest} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
