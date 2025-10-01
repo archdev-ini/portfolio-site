@@ -54,6 +54,7 @@ export type SiteSettings = {
     siteTitle: string;
     hero: {
         headline: string;
+        subline: string;
         tagline: string;
         intro: string;
     };
@@ -83,7 +84,8 @@ const MOCK_SITE_SETTINGS: SiteSettings = {
     id: 'rec_sitesettings',
     siteTitle: 'Inioluwa Oladipupo',
     hero: {
-        headline: 'Architecture Student · Web3 Developer · Founder, IO Studio (est. 2025)',
+        headline: 'Inioluwa Oladipupo',
+        subline: 'Architecture Student · Web3 Developer · Founder, IO Studio (est. 2025)',
         tagline: 'Shaping space. Building code. Empowering communities.',
         intro: "I'm an architecture student and Web3 developer exploring the intersection of design, technology, and community. Through IO Studio, my personal creative lab, I document experiments, build projects, and share ideas that combine architectural thinking with decentralized systems."
     },
@@ -119,31 +121,28 @@ const MOCK_CONTACT_CONTENT: ContactContent = {
 
 const MOCK_SKILLS: SkillCategory[] = [
     {
-      category: 'Architecture',
+      category: 'Architecture Projects',
       icon: DraftingCompass,
       items: [
-        'Academic + conceptual projects',
-        'Designs rooted in Lagos',
-        'Rethinking living, learning, and community spaces',
+        'Academic + conceptual projects exploring form, culture, and sustainability.',
+        'Designs rooted in Lagos, rethinking living, learning, and community spaces.',
       ],
     },
     {
-      category: 'Web3 + Code',
+      category: 'Web3 + Code Projects',
       icon: CodeXml,
       items: [
-        'Smart contracts in Solidity',
-        'Frontend experiments (React, Ethers.js)',
-        'Decentralized learning platforms',
-        'Proof-of-skill ideas',
+        'Smart contracts in Solidity.',
+        'Frontend experiments with React + Ethers.js.',
+        'Decentralized learning platforms and proof-of-skill ideas.',
       ],
     },
     {
       category: 'Crossovers',
       icon: BrainCircuit,
       items: [
-        'Digital-first design workflows',
-        'Merging BIM with blockchain experiments',
-        'Where drawings meet code',
+        'Where drawings meet code.',
+        'From digital-first design workflows to merging BIM with blockchain experiments.',
       ],
     },
 ];
@@ -197,7 +196,6 @@ function mapFeedItemToProject(item: FeedItem, index: number): Project {
         tags: item.categories || [],
         imageId: `project-${(index % 3) + 1}`,
         content: item.content || '',
-        // featured: item.categories?.includes('Featured') // Example of how featured could work
     };
 }
 

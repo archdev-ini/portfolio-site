@@ -2,7 +2,6 @@ import { Header } from '@/components/header';
 import { Footer } from '@/components/footer';
 import { Hero } from '@/components/sections/hero';
 import { WorkPreview } from '@/components/sections/work-preview';
-import { Journal } from '@/components/sections/journal';
 import { Skills } from '@/components/sections/skills';
 import { Contact } from '@/components/sections/contact';
 import { AboutPreview } from '@/components/sections/about-preview-section';
@@ -13,7 +12,6 @@ export default async function Home() {
   const siteSettings = await db.getSiteSettings();
   const aboutContent = await db.getAboutContent();
   const projects = await db.getProjects();
-  const journalPosts = await db.getJournalPosts();
   const skills = await db.getGroupedSkills();
   const contactContent = await db.getContactContent();
 
@@ -29,9 +27,6 @@ export default async function Home() {
         </ScrollAnimation>
         <ScrollAnimation>
           <WorkPreview projects={projects} />
-        </ScrollAnimation>
-        <ScrollAnimation>
-          <Journal posts={journalPosts} />
         </ScrollAnimation>
         <ScrollAnimation>
           <Skills skills={skills} />
