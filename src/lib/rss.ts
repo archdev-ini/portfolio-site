@@ -19,11 +19,6 @@ export async function fetchRSSFeed(feedUrl: string): Promise<FeedItem[]> {
     if (feedCache && (Date.now() - cacheTimestamp < CACHE_DURATION)) {
         return feedCache;
     }
-
-    if (!feedUrl || feedUrl.includes('your-substack-url.com')) {
-        console.warn('SUBSTACK_URL is not defined or is a placeholder. Skipping RSS feed fetch.');
-        return [];
-    }
     
     try {
         const parser = new Parser({

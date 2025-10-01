@@ -199,12 +199,10 @@ function mapFeedItemToProject(item: FeedItem, index: number): Project {
     };
 }
 
+const FEED_URL = 'https://iodesignstudio.substack.com/feed';
 
 async function getProjects(): Promise<Project[]> {
-    const feedUrl = process.env.SUBSTACK_URL;
-    if (!feedUrl) return [];
-
-    const feedItems = await fetchRSSFeed(feedUrl);
+    const feedItems = await fetchRSSFeed(FEED_URL);
     
     // Updated tags for projects
     const projectTags = ['Project Journal', 'Design Sketches'];
@@ -216,10 +214,7 @@ async function getProjects(): Promise<Project[]> {
 
 
 async function getJournalPostsFromRss(): Promise<JournalPost[]> {
-    const feedUrl = process.env.SUBSTACK_URL;
-    if (!feedUrl) return [];
-
-    const feedItems = await fetchRSSFeed(feedUrl);
+    const feedItems = await fetchRSSFeed(FEED_URL);
     
     // Updated tags for journal
     const journalTags = ['Studio Notes', 'Building Futures', 'IO Lab'];
