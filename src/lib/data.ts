@@ -170,34 +170,22 @@ const createSlugFromLink = (link: string): string => {
     }
 }
 
-
-function mapFeedItemToJournalPost(item: FeedItem, index: number): JournalPost {
-    const description = item.contentSnippet ? item.contentSnippet.substring(0, 150) + '...' : 'No description available.';
-    return {
-        id: item.link,
-        title: item.title,
-        link: item.link,
-        description: description,
-        category: item.categories?.[0] || 'General',
-        tags: item.categories || [],
-        imageId: `journal-${(index % 3) + 1}`,
-    };
-}
-
 function mapFeedItemToProject(item: FeedItem, index: number): Project {
     const description = item.contentSnippet ? item.contentSnippet.substring(0, 150) + '...' : 'No description available.';
+    
     return {
         id: item.link,
         slug: createSlugFromLink(item.link),
         title: item.title,
         link: item.link,
         description: description,
-        category: 'General',
+        category: "General",
         tags: item.categories || [],
         imageId: `project-${(index % 3) + 1}`,
         content: item.content || '',
     };
 }
+
 
 const FEED_URL = 'https://iodesignstudio.substack.com/feed';
 
@@ -206,26 +194,13 @@ async function getProjects(): Promise<Project[]> {
     return feedItems.map(mapFeedItemToProject);
 }
 
-
-async function getJournalPostsFromRss(): Promise<JournalPost[]> {
-    const feedItems = await fetchRSSFeed(FEED_URL);
-    return feedItems.map(mapFeedItemToJournalPost);
-}
-
 // "Database" object with functions to fetch data on the server
 export const db = {
     getSiteSettings: async (): Promise<SiteSettings> => MOCK_SITE_SETTINGS,
     getAboutContent: async (): Promise<AboutContent> => MOCK_ABOUT_CONTENT,
     getContactContent: async (): Promise<ContactContent> => MOCK_CONTACT_CONTENT,
     getProjects: getProjects,
-    getJournalPosts: getJournalPostsFromRss,
-    // Note: getProjectPosts is deprecated, use getProjects
-    getProjectPosts: async (): Promise<JournalPost[]> => {
-        console.warn("getProjectPosts is deprecated, use getProjects which returns Project[] type");
-        const projects = await getProjects();
-        // This is a temporary adapter. You should update the call sites.
-        return projects.map(p => ({...p, category: p.category}));
-    },
+    getJournalPosts: getProjects,
     getGroupedSkills: async (): Promise<SkillCategory[]> => MOCK_SKILLS,
     getCVExperience: async (): Promise<CVItem[]> => MOCK_CV_EXPERIENCE,
     getCVEducation: async (): Promise<CVItem[]> => MOCK_CV_EDUCATION,

@@ -22,9 +22,6 @@ export const Hero = ({ hero }: { hero: SiteSettings['hero'] }) => {
           <Button size="lg" asChild>
             <Link href="/work">View My Work</Link>
           </Button>
-          <Button size="lg" variant="outline" asChild>
-            <Link href="/journal">Read My Journal</Link>
-          </Button>
         </div>
       </div>
     </section>

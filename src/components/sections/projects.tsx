@@ -46,7 +46,7 @@ export const Projects = ({ projects, isPage = false }: { projects: Project[], is
   return (
     <section id="projects" className="py-24 md:py-32">
       <div className="container">
-        <SectionTitle>{isPage ? "Work" : "Featured Work"}</SectionTitle>
+        <SectionTitle>{isPage ? "Writing" : "Featured Work"}</SectionTitle>
 
         <div className="max-w-2xl mx-auto mb-8">
             <div className="relative">

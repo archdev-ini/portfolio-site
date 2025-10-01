@@ -17,7 +17,7 @@ export const WorkPreview = ({ projects }: { projects: Project[] }) => {
   return (
     <section id="work" className="py-24 md:py-32 bg-secondary/30">
       <div className="container">
-        <SectionTitle>Selected Work</SectionTitle>
+        <SectionTitle>Selected Writing</SectionTitle>
         <p className="max-w-2xl mx-auto text-center text-lg text-foreground/70 mb-12">
             Each project I take on is a prototype of the future—an experiment in design, technology, or community. The goal isn’t just to create but to shift what’s possible.
         </p>
@@ -47,7 +47,7 @@ export const WorkPreview = ({ projects }: { projects: Project[] }) => {
                 <CardFooter className="p-6 pt-0">
                   <Button variant="outline" asChild className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors">
                     <Link href={`/work/${project.slug}`}>
-                      View Case Study <ArrowRight className="ml-2 h-4 w-4" />
+                      View Post <ArrowRight className="ml-2 h-4 w-4" />
                     </Link>
                   </Button>
                 </CardFooter>
@@ -57,7 +57,7 @@ export const WorkPreview = ({ projects }: { projects: Project[] }) => {
         </div>
         <div className="mt-16 text-center">
           <Button size="lg" asChild>
-            <Link href="/work">View Full Portfolio <MoveRight className="ml-2" /></Link>
+            <Link href="/work">View All Writing <MoveRight className="ml-2" /></Link>
           </Button>
         </div>
       </div>

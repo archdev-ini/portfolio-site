@@ -16,8 +16,7 @@ export const Header = async () => {
   const { siteTitle } = await db.getSiteSettings();
   const navLinks = [
     { href: '/about', label: 'About' },
-    { href: '/work', label: 'Work' },
-    { href: '/journal', label: 'Journal' },
+    { href: '/work', label: 'Writing' },
     { href: '/cv', label: 'CV' },
     { href: '/#contact', label: 'Contact' },
   ];
