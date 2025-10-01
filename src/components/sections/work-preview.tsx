@@ -57,7 +57,7 @@ export const WorkPreview = ({ projects }: { projects: Project[] }) => {
         </div>
         <div className="mt-16 text-center">
           <Button size="lg" asChild>
-            <Link href="/work">View All Writing <MoveRight className="ml-2" /></Link>
+            <Link href="https://iodesignstudio.substack.com" target="_blank">View All Writing <MoveRight className="ml-2" /></Link>
           </Button>
         </div>
       </div>
