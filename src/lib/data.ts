@@ -178,7 +178,7 @@ function mapFeedItemToJournalPost(item: FeedItem, index: number): JournalPost {
         title: item.title,
         link: item.link,
         description: description,
-        category: item.categories?.[0] || 'Uncategorized',
+        category: item.categories?.[0] || 'General',
         tags: item.categories || [],
         imageId: `journal-${(index % 3) + 1}`,
     };
@@ -192,7 +192,7 @@ function mapFeedItemToProject(item: FeedItem, index: number): Project {
         title: item.title,
         link: item.link,
         description: description,
-        category: item.categories?.find(cat => ['Architecture', 'Web3', 'Writing', 'Community'].includes(cat)) || 'General',
+        category: 'General',
         tags: item.categories || [],
         imageId: `project-${(index % 3) + 1}`,
         content: item.content || '',
@@ -203,25 +203,13 @@ const FEED_URL = 'https://iodesignstudio.substack.com/feed';
 
 async function getProjects(): Promise<Project[]> {
     const feedItems = await fetchRSSFeed(FEED_URL);
-    
-    // Updated tags for projects
-    const projectTags = ['Project Journal', 'Design Sketches'];
-
-    return feedItems
-        .filter(item => item.categories?.some(cat => projectTags.includes(cat)))
-        .map(mapFeedItemToProject);
+    return feedItems.map(mapFeedItemToProject);
 }
 
 
 async function getJournalPostsFromRss(): Promise<JournalPost[]> {
     const feedItems = await fetchRSSFeed(FEED_URL);
-    
-    // Updated tags for journal
-    const journalTags = ['Studio Notes', 'Building Futures', 'IO Lab'];
-
-    return feedItems
-        .filter(item => item.categories?.some(cat => journalTags.includes(cat)))
-        .map(mapFeedItemToJournalPost);
+    return feedItems.map(mapFeedItemToJournalPost);
 }
 
 // "Database" object with functions to fetch data on the server
