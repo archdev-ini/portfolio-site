@@ -78,21 +78,14 @@ export const Contact = ({ contact, site }: { contact: ContactContent, site: Site
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           <div className="flex flex-col justify-center">
             <h2 className="text-4xl font-bold tracking-tighter sm:text-5xl font-headline mb-4">
-              Get in Touch
+              {contact.introText}
             </h2>
             <p className="text-lg text-foreground/70 mb-8 max-w-lg">
-                I’m building toward futures where design, technology, and community align.
-If you’re working on something visionary—or want to co-create the systems of tomorrow—let’s connect.
+                {contact.ctaLine}
             </p>
             <div className="flex items-center gap-4">
-                <Button asChild size="lg">
-                    <Link href="mailto:inioluwaoladipupostudio@gmail.com">
-                        inioluwaoladipupostudio@gmail.com
-                    </Link>
-                </Button>
                 <div className="flex space-x-1">
                 {socialLinks.map((social) => (
-                    social.name !== 'Email' &&
                     <Button key={social.name} variant="outline" size="icon" asChild>
                     <Link href={social.href} target="_blank" aria-label={social.name}>
                         {socialIconMap[social.name as keyof typeof socialIconMap]}
@@ -138,14 +131,14 @@ If you’re working on something visionary—or want to co-create the systems of
                     <FormItem>
                       <FormLabel>Message</FormLabel>
                       <FormControl>
-                        <Textarea placeholder="Tell me about your idea..." rows={5} {...field} />
+                        <Textarea placeholder="Let's build something..." rows={5} {...field} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
                 <Button type="submit" disabled={form.formState.isSubmitting} className="w-full" size="lg">
-                  {form.formState.isSubmitting ? 'Sending...' : <>Get in Touch <Send className="ml-2 h-4 w-4" /></>}
+                  {form.formState.isSubmitting ? 'Sending...' : <>Send Message <Send className="ml-2 h-4 w-4" /></>}
                 </Button>
               </form>
             </Form>

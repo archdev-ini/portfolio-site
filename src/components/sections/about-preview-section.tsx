@@ -19,12 +19,9 @@ export const AboutPreview = ({ about }: { about: AboutContent }) => {
                     <p className="text-lg text-foreground/70">
                        {about.shortText}
                     </p>
-                    <p className="text-lg text-foreground/70">
-                        I’m shaping a practice where physical spaces, digital networks, and human creativity merge into futures that empower people. From open learning ecosystems to community-driven platforms, my mission is to design scalable systems for collective growth.
-                    </p>
                     <Button asChild size="lg" variant="outline">
                         <Link href="/about">
-                            Read More <ArrowRight className="ml-2" />
+                            Learn More <ArrowRight className="ml-2" />
                         </Link>
                     </Button>
                 </div>

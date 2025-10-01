@@ -1,4 +1,4 @@
-import { DraftingCompass, CodeXml, Users, type LucideIcon } from 'lucide-react';
+import { DraftingCompass, CodeXml, Users, BrainCircuit, type LucideIcon } from 'lucide-react';
 import { fetchRSSFeed, type FeedItem } from './rss';
 
 export type Project = {
@@ -45,7 +45,7 @@ export type CVItem = {
 };
 
 export type SocialLink = {
-    name: string;
+    name: 'Github' | 'Twitter' | 'LinkedIn' | 'Substack' | 'Email' | 'Instagram';
     href: string;
 }
 
@@ -83,88 +83,79 @@ const MOCK_SITE_SETTINGS: SiteSettings = {
     id: 'rec_sitesettings',
     siteTitle: 'Inioluwa Oladipupo',
     hero: {
-        headline: 'Architecture · Web3 · Creative Innovation',
-        tagline: 'Designing Futures. Building Communities.',
-        intro: "I’m Inioluwa Oladipupo—an architect in training and a community builder in Web3, exploring how spaces, systems, and stories can reimagine the way we live, learn, and connect."
+        headline: 'Architecture Student · Web3 Developer · Founder, IO Studio (est. 2025)',
+        tagline: 'Shaping space. Building code. Empowering communities.',
+        intro: "I'm an architecture student and Web3 developer exploring the intersection of design, technology, and community. Through IO Studio, my personal creative lab, I document experiments, build projects, and share ideas that combine architectural thinking with decentralized systems."
     },
     footer: {
-        text: '© 2024 Inioluwa Oladipupo. All Rights Reserved.',
+        text: '© 2024 IO Studio. All Rights Reserved.',
         socialLinks: [
-            { name: 'Github', href: 'https://github.com' },
-            { name: 'Twitter', href: 'https://twitter.com/inioluwa_xyz' },
+            { name: 'Email', href: 'mailto:inioluwaoladipupostudio@gmail.com' },
             { name: 'LinkedIn', href: 'https://linkedin.com' },
+            { name: 'Twitter', href: 'https://twitter.com/inioluwa_xyz' },
             { name: 'Substack', href: 'https://substack.com' },
-            { name: 'Email', href: 'mailto:inioluwaoladipupostudio@gmail.com' }
         ]
     }
 };
 
 const MOCK_ABOUT_CONTENT: AboutContent = {
     id: 'rec_about',
-    headline: 'Shaping Space. Empowering Communities. Reimagining Futures.',
-    shortText: 'I’m an architecture student and Web3 community builder working at the intersection of design, technology, and storytelling.',
+    headline: 'About Me',
+    shortText: 'I’m an architecture student and Web3 developer exploring the intersection of design, technology, and community. Through IO Studio, my personal creative lab, I document experiments, build projects, and share ideas that combine architectural thinking with decentralized systems.',
     fullText: [
-        "I’m Inioluwa Oladipupo—an architecture student and Web3 community builder working at the intersection of design, technology, and storytelling.",
-        "My journey is about more than projects or platforms—it’s about creating systems that empower people and spark new possibilities.",
-        "In architecture, I design climate-responsive, culturally rooted spaces that adapt to people’s needs today while anticipating tomorrow’s challenges.",
-        "In Web3, I focus on building communities—designing ecosystems where collaboration, learning, and creativity thrive beyond borders.",
-        "Through writing, I connect ideas, document the process, and invite others into the conversation of shaping futures together.",
-        "Across all of this, my mission is simple: to blend design, community, and innovation into frameworks that don’t just imagine change but make it real."
+        "I’m an architecture student and Web3 developer exploring the intersection of design, technology, and community.",
+        "Through IO Studio, my personal creative lab, I document experiments, build projects, and share ideas that combine architectural thinking with decentralized systems.",
+        "I believe in futures that are sustainable, equitable, and rooted in culture — whether through climate-responsive buildings or community-driven digital platforms."
     ],
-    highlights: [
-        { title: 'Architecture', description: 'Designing sustainable, human-centered spaces with cultural depth and environmental intelligence.' },
-        { title: 'Web3 / Community', description: 'Building decentralized communities and open ecosystems that enable people to learn, connect, and grow.' },
-        { title: 'Writing', description: 'Publishing essays and reflections on architecture, technology, and creativity through platforms like 0xSketches.' },
-        { title: 'Initiatives', description: 'Through projects like Aether Community, Rootos, and Buildbase, I explore new ways to democratize knowledge, empower collaboration, and design systems that matter.' }
-    ],
+    highlights: [],
     profileImageId: 'about-portrait'
 };
 
 const MOCK_CONTACT_CONTENT: ContactContent = {
     id: 'rec_contact',
-    introText: 'Get in Touch',
-    ctaLine: 'I’m building toward futures where design, technology, and community align. If you’re working on something visionary—or want to co-create the systems of tomorrow—let’s connect.'
+    introText: 'Let’s connect.',
+    ctaLine: 'I’m always open to conversations, collaborations, and opportunities around architecture, technology, and community building.'
 }
 
 const MOCK_SKILLS: SkillCategory[] = [
     {
-      category: 'Architecture & Design',
+      category: 'Architecture',
       icon: DraftingCompass,
       items: [
-        'Climate-responsive, conceptual design',
-        'BIM-driven workflows (Revit, AutoCAD)',
-        'Systems thinking for built environments',
+        'Academic + conceptual projects',
+        'Designs rooted in Lagos',
+        'Rethinking living, learning, and community spaces',
       ],
     },
     {
-      category: 'Web3 & Development',
+      category: 'Web3 + Code',
       icon: CodeXml,
       items: [
-        'Decentralized collaboration frameworks',
-        'Community building & engagement',
-        'Smart Contract Concepts',
-        'Next.js & React',
+        'Smart contracts in Solidity',
+        'Frontend experiments (React, Ethers.js)',
+        'Decentralized learning platforms',
+        'Proof-of-skill ideas',
       ],
     },
     {
-      category: 'Writing & Community',
-      icon: Users,
+      category: 'Crossovers',
+      icon: BrainCircuit,
       items: [
-        'Content strategy & storytelling',
-        'Open learning platforms',
-        'Cross-disciplinary innovation',
-        'Community design & management'
+        'Digital-first design workflows',
+        'Merging BIM with blockchain experiments',
+        'Where drawings meet code',
       ],
     },
 ];
 
 const MOCK_CV_EXPERIENCE: CVItem[] = [
-    { id: 'exp1', date: '2023 - Present', title: 'Community Architect', subtitle: 'Aether Community', description: 'Designing and building a decentralized learning ecosystem for creatives and developers.' },
-    { id: 'exp2', date: '2022 - 2023', title: 'Architectural Intern', subtitle: 'Studio Praxis', description: 'Contributed to the design and documentation of several residential and commercial projects.' },
+    { id: 'exp1', date: '2023 - Present', title: 'Founder', subtitle: 'IO Studio', description: 'Personal creative lab for projects at the intersection of architecture, code, and community.' },
+    { id: 'exp2', date: 'Ongoing', title: '0x120 Days of Web3 Dev Challenge', subtitle: 'Self-Directed', description: 'A public learning journey documenting my progress in Web3 development.' },
+    { id: 'exp3', date: 'Ongoing', title: '148-day Architecture + Revit Learning Journey', subtitle: 'Self-Directed', description: 'Intensive study and practice in architectural software and principles.' },
 ];
 
 const MOCK_CV_EDUCATION: CVItem[] = [
-    { id: 'edu1', date: '2020 - 2025', title: 'Master of Architecture', subtitle: 'University of Digital Futures', description: 'Focusing on computational design and sustainable urbanism.' },
+    { id: 'edu1', date: '2020 - 2025', title: 'Master of Architecture (Expected)', subtitle: 'University of Digital Futures', description: 'Focusing on computational design and sustainable urbanism.' },
 ];
 
 // Helper to create a slug from a URL
@@ -217,6 +208,7 @@ async function getProjects(): Promise<Project[]> {
 
     const feedItems = await fetchRSSFeed(feedUrl);
     
+    // Updated tags for projects
     const projectTags = ['Project Journal', 'Design Sketches'];
 
     return feedItems
@@ -231,6 +223,7 @@ async function getJournalPostsFromRss(): Promise<JournalPost[]> {
 
     const feedItems = await fetchRSSFeed(feedUrl);
     
+    // Updated tags for journal
     const journalTags = ['Studio Notes', 'Building Futures', 'IO Lab'];
 
     return feedItems
